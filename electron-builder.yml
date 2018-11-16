@@ -1,0 +1,31 @@
+productName: OptimizeImageTool
+appId: org.develar.DevToolsCollection
+files:
+  - dist/
+  - node_modules/
+  - app.html
+  - main.prod.js
+  - main.prod.js.map
+  - package.json
+  - css/
+  - font/
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+win:
+  target:
+    - nsis
+  icon: build/icon.ico
+linux:
+  target:
+    - deb
+    - AppImage
+  category: Development
+directories:
+  buildResources: resources
+  output: release
