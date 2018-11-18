@@ -1,12 +1,6 @@
 import dir from 'node-dir';
 import fs from 'fs';
 import path from 'path';
-// import Logger from './Logger';
-
-// const { promisify } = require('util');
-// const sizeOf = promisify(require('image-size'));
-
-export const RENAME = 'rename';
 
 const handelFile = async (file, pattern, replaceTo) => {
   // Logger.info('handle file', file, pattern, replaceTo);
@@ -20,5 +14,12 @@ const handelFile = async (file, pattern, replaceTo) => {
   }
 };
 
-export const renameFolder = (source, pattern, replaceTo) => dir.promiseFiles(source)
+const renameFolder = (source, pattern, replaceTo) => dir.promiseFiles(source)
   .then(files => Promise.all(files.map(file => handelFile(file, pattern, replaceTo))));
+
+export default function onRename(data) {
+  const { src, pattern, replaceTo } = data;
+  return renameFolder(src, pattern, replaceTo).
+    then(() => 'Rename success!')
+    .catch((error) => error.message);
+}

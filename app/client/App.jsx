@@ -5,6 +5,7 @@ import {
   FormGroup, FormControl,
 } from 'react-bootstrap';
 import { ipcRenderer, remote } from 'electron';
+import { RENAME } from '../constant.message';
 
 const { dialog } = remote;
 
@@ -37,8 +38,8 @@ class App extends React.Component {
       return;
     }
     const { src, pattern, replaceTo } = this.state;
-    ipcRenderer.send('rename', { src, pattern, replaceTo });
-    ipcRenderer.once('rename', (sender, response) => {
+    ipcRenderer.send(RENAME, { src, pattern, replaceTo });
+    ipcRenderer.once(RENAME, (sender, response) => {
       localStorage.setItem(SRC_LAST_RENAME_FOLDER, src);
       localStorage.setItem(SRC_LAST_RENAME_PATTERN, pattern);
       localStorage.setItem(SRC_LAST_RENAME_REPLACE_TO, replaceTo);

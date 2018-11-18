@@ -10,9 +10,9 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain } from 'electron';
-import { renameFolder, RENAME } from './server/RenameService';
-import Logger from './server/Logger';
+import { app, BrowserWindow } from 'electron';
+import Logger from './server/utils/Logger';
+import Router from './server/router/Router';
 
 let mainWindow = null;
 
@@ -53,20 +53,6 @@ const installExtensions = async () => {
   ).catch(Logger.log);
 };
 
-const addIPCEvent = () => {
-  ipcMain.on(RENAME, (event, data) => {
-    Logger.log(RENAME, data);
-    const { src, pattern, replaceTo } = data;
-    renameFolder(src, pattern, replaceTo).then(file => {
-      Logger.info('Rename success!');
-      mainWindow.webContents.send(RENAME, 'Rename success!');
-      return file;
-    }).catch((error) => {
-      Logger.error(error);
-      mainWindow.webContents.send(RENAME, error.message);
-    });
-  });
-};
 /**
  * Add event listeners...
  */
@@ -103,7 +89,7 @@ app.on('ready', async () => {
     }
     mainWindow.show();
     mainWindow.focus();
-    addIPCEvent();
+    Router(mainWindow);
   });
 
   mainWindow.on('closed', () => {
