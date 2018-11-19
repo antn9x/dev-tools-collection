@@ -1,140 +1,63 @@
 import React from 'react';
-import {
-  Grid, Row, Col, Button,
-  InputGroup,
-  FormGroup, FormControl,
-} from 'react-bootstrap';
-import { ipcRenderer, remote } from 'electron';
-import { RENAME } from '../constant.message';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import RenameTab from './components/RenameTab';
 
-const { dialog } = remote;
+function TabContainer(props) {
+  return (
+    <Typography component="div" style={{ padding: 8 * 3 }}>
+      {props.children}
+    </Typography>
+  );
+}
 
-const SRC_LAST_RENAME_FOLDER = 'src_Last_Rename_folder';
-const SRC_LAST_RENAME_PATTERN = 'src_Last_Rename_pattern';
-const SRC_LAST_RENAME_REPLACE_TO = 'src_Last_Rename_replace_to';
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
-class App extends React.Component {
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      src: localStorage.getItem(SRC_LAST_RENAME_FOLDER) || '',
-      pattern: localStorage.getItem(SRC_LAST_RENAME_PATTERN) || '.js',
-      replaceTo: localStorage.getItem(SRC_LAST_RENAME_REPLACE_TO) || '.ts'
-    };
-    this.handleChangeSource = this.handleChangeSource.bind(this);
-    this.handleChangeDestination = this.handleChangeDestination.bind(this);
-    this.selectFileCallback = this.selectFileCallback.bind(this);
-    this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
-  }
+class SimpleTabs extends React.Component {
+  state = {
+    value: 0,
+  };
 
-  onClickRename() {
-    if (!this.state.src) {
-      alert('Please enter source folder!');
-      return;
-    }
-    if (!this.state.pattern) {
-      alert('Please enter pattern!');
-      return;
-    }
-    const { src, pattern, replaceTo } = this.state;
-    ipcRenderer.send(RENAME, { src, pattern, replaceTo });
-    ipcRenderer.once(RENAME, (sender, response) => {
-      localStorage.setItem(SRC_LAST_RENAME_FOLDER, src);
-      localStorage.setItem(SRC_LAST_RENAME_PATTERN, pattern);
-      localStorage.setItem(SRC_LAST_RENAME_REPLACE_TO, replaceTo);
-      console.log(response);
-    });
-  }
+  handleChange = (event, value) => {
+    this.setState({ value });
+  };
 
-  selectFileCallback(fileNames) {
-    if (fileNames === undefined) {
-      console.log("No file selected");
-
-    } else {
-      console.log("file selected", fileNames);
-      const file = fileNames[0];
-      this.setState({ src: file });
-      localStorage.setItem(SRC_LAST_RENAME_FOLDER, file);
-    }
-  }
-
-  onClickSource(src) {
-    dialog.showOpenDialog({
-      title: "Select the a folder.",
-      properties: ['openDirectory']
-    }, (fileNames) => this.selectFileCallback(fileNames, src));
-  }
-
-  handleChangeSource(event) {
-    // console.log('Selected file:', event.target.value);
-    this.setState({ src: event.target.value });
-  }
-
-  handleChangeDestination(event) {
-    // console.log('Selected file:', event.target.value);
-    this.setState({ pattern: event.target.value });
-  }
-  handleChangeReplaceTo(event) {
-    // console.log('Selected file:', event.target.value);
-    this.setState({ replaceTo: event.target.value });
-  }
   render() {
+    const { classes } = this.props;
+    const { value } = this.state;
+
     return (
-      <Grid cellPadding="">
-        <Row>&nbsp;</Row>
-        <Row className="show-grid">
-          <FormGroup>
-            <InputGroup>
-              <InputGroup.Addon>Source folder:</InputGroup.Addon>
-              <FormControl
-                type="text"
-                value={this.state.src}
-                onChange={this.handleChangeSource}
-                cols={50}
-              />
-              <Button onClick={() => this.onClickSource()} >Choose Source</Button>
-            </InputGroup>
-          </FormGroup>
-        </Row>
-        <Row className="show-grid">
-          <InputGroup>
-            <InputGroup.Addon>Pattern:</InputGroup.Addon>
-            <FormControl
-              type="text"
-              value={this.state.pattern}
-              onChange={this.handleChangeDestination}
-              cols={50}
-            />
-          </InputGroup>
-        </Row>
-        <Row className="show-grid">
-          <InputGroup>
-            <InputGroup.Addon>Replace to:</InputGroup.Addon>
-            <FormControl
-              type="text"
-              value={this.state.replaceTo}
-              onChange={this.handleChangeReplaceTo}
-              cols={50}
-            />
-          </InputGroup>
-        </Row>
-        <Row>&nbsp;</Row>
-        <Row className="show-grid">
-          <Col >
-            <Button
-              bsStyle="primary"
-              bsSize="large"
-              block
-              className="optimizeButton"
-              onClick={() => this.onClickRename()}
-            >Rename
-            </Button>
-          </Col>
-        </Row>
-      </Grid>
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Tabs value={value} onChange={this.handleChange}>
+            <Tab label="Rename" />
+            <Tab label="Resize Image" />
+            <Tab label="Optimize Image" />
+          </Tabs>
+        </AppBar>
+        {value === 0 && <TabContainer><RenameTab /></TabContainer>}
+        {value === 1 && <TabContainer>Item Two</TabContainer>}
+        {value === 2 && <TabContainer>Item Three</TabContainer>}
+      </div>
     );
   }
 }
 
-export default App;
+SimpleTabs.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SimpleTabs);
