@@ -89,7 +89,7 @@ app.on('ready', async () => {
     }
     mainWindow.show();
     mainWindow.focus();
-    Router(mainWindow);
+    Router();
   });
 
   mainWindow.on('closed', () => {

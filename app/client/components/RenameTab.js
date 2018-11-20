@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-import { RENAME } from '../../constant.message';
+import { RENAME, GET_FOLDER_FILES } from '../../constant.message';
 
 const { dialog } = remote;
 
@@ -42,7 +42,7 @@ class RenameTab extends React.Component {
         this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
     }
 
-    onClickRename() {
+    onClickRename = () => {
         if (!this.state.src) {
             alert('Please enter source folder!');
             return;
@@ -61,19 +61,23 @@ class RenameTab extends React.Component {
         });
     }
 
-    selectFileCallback(fileNames) {
+    selectFileCallback = (fileNames) => {
         if (fileNames === undefined) {
             console.log("No file selected");
 
         } else {
             console.log("file selected", fileNames);
-            const file = fileNames[0];
-            this.setState({ src: file });
-            localStorage.setItem(SRC_LAST_RENAME_FOLDER, file);
+            const src = fileNames[0];
+            this.setState({ src });
+            localStorage.setItem(SRC_LAST_RENAME_FOLDER, src);
+            ipcRenderer.send(GET_FOLDER_FILES, { src });
+            ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+                console.log(response);
+            });
         }
     }
 
-    onClickSource(src) {
+    onClickSource = (src) => {
         dialog.showOpenDialog({
             title: "Select the a folder.",
             properties: ['openDirectory']
