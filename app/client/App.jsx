@@ -6,6 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import RenameTab from './components/RenameTab';
+import ResizeTab from './components/ResizeTab';
 
 function TabContainer(props) {
   return (
@@ -26,9 +27,9 @@ const styles = theme => ({
   },
 });
 
-class SimpleTabs extends React.Component {
+class App extends React.Component {
   state = {
-    value: 0,
+    value: 1,
   };
 
   handleChange = (event, value) => {
@@ -49,15 +50,15 @@ class SimpleTabs extends React.Component {
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer><RenameTab /></TabContainer>}
-        {value === 1 && <TabContainer>Item Two</TabContainer>}
+        {value === 1 && <TabContainer><ResizeTab /></TabContainer>}
         {value === 2 && <TabContainer>Item Three</TabContainer>}
       </div>
     );
   }
 }
 
-SimpleTabs.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withStyles(styles)(App);
