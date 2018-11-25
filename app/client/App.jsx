@@ -41,7 +41,7 @@ class SimpleTabs extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Rename" />
             <Tab label="Resize Image" />

@@ -3,6 +3,7 @@ import dir from 'node-dir';
 
 const handelFile = async (file, pattern) => {
     // Logger.info('handle file', file, pattern);
+
     if (!pattern || file.match(pattern)) {
         // Logger.log({ baseName, basePath, newName });
         return file;
