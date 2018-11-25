@@ -7,14 +7,12 @@ import Button from '@material-ui/core/Button';
 import path from 'path';
 
 class File extends Component {
-  state = {
-    newName: `${path.extname(this.props.file)}`
-  }
+  state = {}
 
   render() {
-    const { clickCheckbox, isSelected, changeName, rename, file } = this.props;
+    const { clickCheckbox, isSelected, changeName, rename, eachFileInfo } = this.props;
     const { newName } = this.state;
-    const oldName = path.basename(file);
+    const baseName = eachFileInfo.base;
 
     return (
       <TableRow selected={isSelected}>
@@ -23,26 +21,17 @@ class File extends Component {
             onClick={event => clickCheckbox(event, index)}
             checked={isSelected} />
         </TableCell>
-        <TableCell style={{ fontSize: 14 }}>{oldName}</TableCell>
-        <TableCell>
+        <TableCell style={{ fontSize: 14 }}>{baseName}</TableCell>
+        {/* <TableCell>
           <TextField
             id="outlined-with-placeholder"
             label="Pattern"
             margin="normal"
             variant="outlined"
-            fullWidth="true"
             value={newName}
             onChange={this.handleChangeName}
           />
-        </TableCell>
-        <TableCell>
-          <Button
-          variant="outlined"
-          color="secondary"
-          onClick={() => this.handleRename()}>
-            RE NAME
-          </Button>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
     );
   }

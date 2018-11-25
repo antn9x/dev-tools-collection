@@ -13,10 +13,6 @@ body {
   font-family: Arial, Helvetica, Helvetica Neue, serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 h2 {
   margin: 0;
   font-size: 2.25rem;

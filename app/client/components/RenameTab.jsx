@@ -14,8 +14,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import File from './File';
+import ExtPopover from './ExtPopover';
 
-import { RENAME, GET_FOLDER_FILES } from '../../constant.message';
+import { RENAME, GET_FOLDER_FILES, RENAME_ALL } from '../../constant.message';
 
 const { dialog } = remote;
 
@@ -43,7 +44,8 @@ class RenameTab extends React.Component {
       // pattern: localStorage.getItem(SRC_LAST_RENAME_PATTERN) || '.js',
       // replaceTo: localStorage.getItem(SRC_LAST_RENAME_REPLACE_TO) || '.ts',
       selected: [],
-      files: []
+      filesInfo: [],
+      anchorEl: null
     };
     this.handleChangeSource = this.handleChangeSource.bind(this);
     // this.handleChangeDestination = this.handleChangeDestination.bind(this);
@@ -89,8 +91,10 @@ class RenameTab extends React.Component {
       ipcRenderer.send(GET_FOLDER_FILES, { src });
       ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
         this.setState({
-          files: [...response]
+          filesInfo: [...response]
         });
+
+        console.log(this.state.filesInfo);
       });
     }
   }
@@ -143,11 +147,34 @@ class RenameTab extends React.Component {
     this.setState({ selected: newSelected });
   };
 
+  handleOpenPopup = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    });
+  }
+
+  handleClosePopup = () => {
+    this.setState({
+      anchorEl: null
+    });
+  }
+
+  handleRenameExt = (oldExt, newExt) => {
+    const { src } = this.state;
+    console.log(RENAME_ALL);
+
+    ipcRenderer.send(RENAME_ALL, { src, oldExt, newExt });
+    ipcRenderer.once(RENAME_ALL, (sender, response) => {
+      console.log(response);
+    });
+  }
+
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const { classes } = this.props;
-    const { files, selected } = this.state;
+    const { filesInfo, selected, anchorEl } = this.state;
+    const open = Boolean(anchorEl);
 
     return (
       <div className={classes.root}>
@@ -204,37 +231,57 @@ class RenameTab extends React.Component {
           </Grid>
         </Grid> */}
 
-        <Button variant="contained" color="primary" className={classes.button} onClick={this.onClickSource}>
-          Choose Source <CloudUploadIcon className={classes.rightIcon} />
-        </Button>
+        <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: 20 }}>
+          <Button variant="contained" color="primary" onClick={this.onClickSource}>
+            Choose Source <CloudUploadIcon className={classes.rightIcon} />
+          </Button>
+
+          <Button
+          variant="contained"
+          color="secondary"
+          aria-owns={open ? 'change-ext-popper' : undefined}
+          aria-haspopup="true"
+          onClick={this.handleOpenPopup}>
+            Change Extname
+          </Button>
+
+          <Button variant="contained" color="default">
+            Change Extname selected
+          </Button>
+        </div>
+
+        <ExtPopover
+        open={open}
+        closePopup={this.handleClosePopup}
+        anchorEl={anchorEl}
+        renameExt={this.handleRenameExt} />
 
         <Table>
-          <TableHead style={{ backgroundColor: '#000' }}>
+          <TableHead>
             <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  indeterminate={selected.length > 0 && selected.length < files.length}
-                  checked={files.length !== 0 && selected.length === files.length}
+                  indeterminate={selected.length > 0 && selected.length < filesInfo.length}
+                  checked={filesInfo.length !== 0 && selected.length === filesInfo.length}
                   onChange={this.handleSelectAllClick} />
               </TableCell>
-              <TableCell style={{ fontSize: 14, color: '#fff' }}>Name</TableCell>
-              <TableCell style={{ fontSize: 14, color: '#fff' }}>New Name</TableCell>
+              <TableCell>Name</TableCell>
+              {/* <TableCell>New Name</TableCell> */}
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {files.map((file, index) => {
+            {filesInfo.map((eachFileInfo, index) => {
               const isSelected = this.isSelected(index);
 
               return (
                 <File
                 key={index}
-                file={file}
+                eachFileInfo={eachFileInfo}
                 isSelected={isSelected}
                 clickCheckbox={this.handleClick}
-                selected={this.state.selected}
-                rename={this.onClickRename}/>
+                selected={this.state.selected} />
               )
             })}
           </TableBody>
