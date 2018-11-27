@@ -9,7 +9,7 @@ import path from 'path';
 
 class FileDisplay extends Component {
     state = {
-        newName: `${path.extname(this.props.file)}`
+        newName: this.props.file.base
     }
 
     handleChangeName = (event) => {
@@ -19,23 +19,23 @@ class FileDisplay extends Component {
     }
 
     handleRename = () => {
-        const oldName = path.basename(this.props.file);
-        const filePath = path.dirname(this.props.file);
+        const oldName = path.basename(this.props.file.path);
+        const filePath = path.dirname(this.props.file.path);
         const {newName} = this.state;
         this.props.rename(filePath, oldName, newName);
     }
 
     render() {
         const { clickCheckbox, isSelected, file } = this.props;
-        const { newName } = this.state;
-        const oldName = path.basename(file);
+        // const { newName } = this.state;
+        const oldName = file.base
 
         return (
           <TableRow selected={isSelected}>
             <TableCell padding="checkbox">
               <Checkbox
                 onClick={clickCheckbox}
-                checked={isSelected}
+                onChange={isSelected}
               />
             </TableCell>
             <TableCell style={{ fontSize: 14 }}>{oldName}</TableCell>
@@ -46,7 +46,7 @@ class FileDisplay extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth="true"
-                value={newName}
+                value={this.state.newName}
                 onChange={this.handleChangeName}
               />
             </TableCell>

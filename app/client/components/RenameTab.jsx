@@ -274,7 +274,7 @@ class RenameTab extends React.Component {
           <TableBody>
             {filesInfo.map((eachFileInfo, index) => {
               const isSelected = this.isSelected(index);
-
+              
               return (
                 <File
                 key={index}

@@ -11,7 +11,9 @@ class File extends Component {
 
   render() {
     const { clickCheckbox, isSelected, changeName, rename, eachFileInfo } = this.props;
-    const { newName } = this.state;
+    // const { newName } = this.state;
+    console.log(eachFileInfo);
+    
     const baseName = eachFileInfo.base;
 
     return (
@@ -36,18 +38,18 @@ class File extends Component {
     );
   }
 
-  handleChangeName = (event) => {
-    this.setState({
-      newName: event.target.value
-    });
-  }
+  // handleChangeName = (event) => {
+  //   this.setState({
+  //     newName: event.target.value
+  //   });
+  // }
 
-  handleRename = () => {
-    const oldName = path.basename(this.props.file);
-    const filePath = path.dirname(this.props.file);
-    const newName = this.state.newName;
-    this.props.rename(filePath, oldName, newName);
-  }
+  // handleRename = () => {
+  //   const oldName = path.basename(this.props.file);
+  //   const filePath = path.dirname(this.props.file);
+  //   const newName = this.state.newName;
+  //   this.props.rename(filePath, oldName, newName);
+  // }
 }
 
 export default File;

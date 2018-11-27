@@ -80,6 +80,8 @@ class ResizeTab extends React.Component {
       setLastResizeFolder(src);
       ipcRenderer.send(GET_FOLDER_FILES, { src });
       ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+        console.log(response);
+        
         this.setState({
           files: [...response]
         });
@@ -228,10 +230,10 @@ class ResizeTab extends React.Component {
               <TableBody>
                 {files.map((file, index) => {
                   const isSelected = this.isSelected(index);
-
+                  
                   return (
                     <FileDisplay
-                      key="file"
+                      key={index}
                       file={file}
                       isSelected={isSelected}
                       clickCheckbox={this.handleClick}
