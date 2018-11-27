@@ -34,7 +34,7 @@ export const optimizeImage = (imageData) => {
 };
 
 /**
- * resize a list of images
+ * Optimize a list of images
  * @param {Array} imageList 
  */
 export const optimizeListImages = (imageList) => Promise.all(imageList.map(optimizeImage));

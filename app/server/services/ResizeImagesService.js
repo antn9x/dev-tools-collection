@@ -12,14 +12,14 @@ import Logger from "../utils/Logger";
  */
 export const createThumnail = (imageData) => {
   const {
-    imgPath,
-    outputDir,
+    source,
+    destination,
     name,
     width,
     height
   } = imageData;
-  const fileName = path.resolve(imgPath, name);
-  const newPath = outputDir ? path.join(outputDir, name) : fileName;
+  const fileName = path.resolve(source, name);
+  const newPath = destination ? path.join(destination, name) : fileName;
   Logger.log(`Filename: ${  fileName}`);
   return new Promise((resolve, reject) => {
     sharp(fileName)
