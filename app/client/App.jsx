@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import RenameTab from './components/RenameTab';
 import ResizeTab from './components/ResizeTab';
+import OptimizeImageTab from './containers/OptimizeImageTab';
 
 function TabContainer(props) {
   return (
@@ -29,7 +30,7 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
-    value: 1,
+    value: 2,
   };
 
   handleChange = (event, value) => {
@@ -51,7 +52,7 @@ class App extends React.Component {
         </AppBar>
         {value === 0 && <TabContainer><RenameTab /></TabContainer>}
         {value === 1 && <TabContainer><ResizeTab /></TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
+        {value === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
       </div>
     );
   }
