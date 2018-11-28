@@ -37,4 +37,26 @@ export const optimizeImage = (imageData) => {
  * Optimize a list of images
  * @param {Array} imageList 
  */
-export const optimizeListImages = (imageList) => Promise.all(imageList.map(optimizeImage));
+const optimizeListImages = (imageList) => Promise.all(imageList.map(optimizeImage));
+
+const genDataImagesList = (source, destination, name, quality) => ({
+  source,
+  destination,
+  quality,
+  name,
+});
+/**
+ * Optimize a list of images
+ * @param {Object} imageListData 
+ */
+
+export const optimizeAllImages = (imageListData) => {
+  const {
+    src,
+    des,
+    nameList,
+    qualityRange
+  } = imageListData;
+
+  return Promise.all(nameList.map(name => genDataImagesList(src, des, name, qualityRange)).map(optimizeListImages));
+};
