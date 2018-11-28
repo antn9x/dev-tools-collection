@@ -1,12 +1,9 @@
 import dir from 'node-dir';
 import path from 'path';
-// import Logger from '../utils/Logger';
 
-const handelFile = async (file, pattern) => {
-  // Logger.info('handle file', file, pattern);
+const handelFile = async (file, patternList = []) => {
 
-  if (!pattern || file.match(pattern)) {
-    // Logger.log({ baseName, basePath, newName });
+  if (!patternList.length || patternList.some(pat => file.match(pat))) {
     return {
       path: path.dirname(file),
       base: path.basename(file),
@@ -15,7 +12,7 @@ const handelFile = async (file, pattern) => {
   }
 };
 
-export default function getFilesInFoler({ src, pattern }) {
-  return dir.promiseFiles(src)
-    .then(files => Promise.all(files.map(file => handelFile(file, pattern))));
-}
+const getFilesInFolder = ({src, patternList}) => dir.promiseFiles(src)
+  .then(files => Promise.all(files.map(file => handelFile(file, patternList))));
+
+export default getFilesInFolder;
