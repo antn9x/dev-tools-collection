@@ -6,7 +6,6 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,21 +13,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import FileDisplay from './FileDisplay';
+import FileChoose from './FileChoose';
+import FileChooseSave from './FileChooseSave';
 
-import { RE_SIZE, GET_FOLDER_FILES } from '../../constant.message';
-import { getLastResizeFolder, setLastResizeFolder } from '../storage/ResizeTabData';
+import { getLastResizeFolder } from '../storage/ResizeTabData';
 
-import FileChooser from './FileChooser';
-import FileChooserSave from './FileChooserSave';
-
-const { dialog } = remote;
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   paper: {
-    dispaly: 'flex',
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary,
@@ -43,20 +38,36 @@ class ResizeTab extends React.Component {
       src: getLastResizeFolder(),
       selected: [],
       files: [],
-      srcOpenFile: '',
-      des: '',
-      namelist: [],
-      pattern: '',
-      replaceTo: ''
+      fileOpen: '',
+      fileSave: '',
+      width: '',
+      height: ''
     };
+    
+    this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
   }
 
   onClickResize = () => {
+
+    var resize ={
+      src: this.state.fileOpen,
+      des: this.state.fileSave,
+      listName:[],
+      width: this.state.width,
+      height: this.state.height
+    };
+    console.log(resize);
     
+
+  }
+  handleChangeDestination = (event) => {
+    this.setState({
+      width: event.target.value
+    })
   }
 
   handleChangeReplaceTo = (event) => {
-    this.setState({ replaceTo: event.target.value });
+    this.setState({ height: event.target.value });
   }
 
   handleSelectAllClick = event => {
@@ -90,30 +101,35 @@ class ResizeTab extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  receiveListFile = (data) => {
+  receivelistFile = (data) => {
     this.setState({
-      files: [...data.listFile],
-      srcOpenFile: data.fileName
-    });
+      files: data.listFile,
+      fileOpen : data.fileName
+    })
+    console.log(data);
+    
   }
 
-  receiveFileSave = (fileSave) => {
+  fileSave = (fileSave) => {
     this.setState({
-      des: fileSave
-    });
+      fileSave: fileSave,
+    })
+
+    console.log(fileSave);
+    
   }
 
   render() {
     const { classes } = this.props;
-    const { files, selected } = this.state;
+    const { files, selected, height, width  } = this.state;
 
     return (
-      <Grid container >
+      <Grid container spacing={2}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
-            <FileChooser listFile={this.receiveListFile}/>
-            <FileChooserSave fileSave={this.receiveFileSave}/>
-            <Paper>
+            <FileChoose listFile={this.receivelistFile}/>
+            <FileChooseSave fileSave={this.fileSave}/>
+            <Paper >
               <TextField
                 id="outlined-with-placeholder"
                 label="Width"
@@ -121,7 +137,7 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                value={this.state.pattern}
+                value={width}
                 onChange={this.handleChangeDestination}
               />
               <TextField
@@ -131,19 +147,19 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                value={this.state.replaceTo}
+                value={height}
                 onChange={this.handleChangeReplaceTo}
               />
             </Paper>
             <Button
-                variant="outlined"
-                color="secondary"
-                style={{ marginTop: 8 }}
-                className={classes.button}
-                onClick={this.onClickResize}
-              >
-                RE SIZE
-              </Button>
+              variant="outlined"
+              color="secondary"
+              style={{ marginTop: 8 }}
+              className={classes.button}
+              onClick={this.onClickResize}
+            >
+              RE SIZE
+            </Button>
           </Paper>
         </Grid>
         <Grid item xs={9}>
@@ -160,7 +176,7 @@ class ResizeTab extends React.Component {
                   </TableCell>
                   <TableCell >Name</TableCell>
                   <TableCell >Demension</TableCell>
-                  <TableCell />
+                  <TableCell/>
                 </TableRow>
               </TableHead>
 
@@ -172,11 +188,12 @@ class ResizeTab extends React.Component {
                     <FileDisplay
                       key={index}
                       file={file}
+                      height={height}
+                      width={width}
                       isSelected={isSelected}
-                      clickCheckbox={this.handleClick}
+                      // clickCheckbox={this.handleClick}
                       selected={this.state.selected}
-                      rename={this.onClickRename}
-                      // propsNameImg={this.receiveNameImg}
+                      rename={this.onClickResize}
                     />
                   );
                 })}
