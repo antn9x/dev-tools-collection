@@ -18,6 +18,9 @@ import FileDisplay from './FileDisplay';
 import { RE_SIZE, GET_FOLDER_FILES } from '../../constant.message';
 import { getLastResizeFolder, setLastResizeFolder } from '../storage/ResizeTabData';
 
+import FileChooser from './FileChooser';
+import FileChooserSave from './FileChooserSave';
+
 const { dialog } = remote;
 
 const styles = theme => ({
@@ -25,6 +28,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
+    dispaly: 'flex',
     padding: theme.spacing.unit * 2,
     textAlign: 'center',
     color: theme.palette.text.secondary,
@@ -38,75 +42,20 @@ class ResizeTab extends React.Component {
     this.state = {
       src: getLastResizeFolder(),
       selected: [],
-      files: []
+      files: [],
+      srcOpenFile: '',
+      des: '',
+      namelist: [],
+      pattern: '',
+      replaceTo: ''
     };
-    this.handleChangeSource = this.handleChangeSource.bind(this);
-    // this.handleChangeDestination = this.handleChangeDestination.bind(this);
-    this.selectFileCallback = this.selectFileCallback.bind(this);
-    this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
   }
 
-  onClickRename = (filePath, oldName, newName) => {
-    // if (!this.state.src) {
-    //   alert('Please enter source folder!');
-    //   return;
-    // }
-    // if (!this.state.pattern) {
-    //   alert('Please enter pattern!');
-    //   return;
-    // }
-    // const { src, pattern, replaceTo } = this.state;
-    // ipcRenderer.send(RENAME, { src, pattern, replaceTo });
-    if (!newName) {
-      console.log('Import new name pls!');
-      return;
-    }
-
-    ipcRenderer.send(RE_SIZE, { filePath, oldName, newName });
-
-    ipcRenderer.once(RE_SIZE, (sender, response) => {
-      console.log(response);
-    });
+  onClickResize = () => {
+    
   }
 
-  selectFileCallback = (fileNames) => {
-    if (fileNames === undefined) {
-      console.log("No file selected");
-
-    } else {
-      console.log("file selected", fileNames);
-      const src = fileNames[0];
-      this.setState({ src });
-      setLastResizeFolder(src);
-      ipcRenderer.send(GET_FOLDER_FILES, { src });
-      ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-        console.log(response);
-        
-        this.setState({
-          files: [...response]
-        });
-      });
-    }
-  }
-
-  onClickSource = (src) => {
-    dialog.showOpenDialog({
-      title: "Select the a folder.",
-      properties: ['openDirectory']
-    }, (fileNames) => this.selectFileCallback(fileNames, src));
-  }
-
-  handleChangeSource(event) {
-    // console.log('Selected file:', event.target.value);
-    this.setState({ src: event.target.value });
-  }
-
-  // handleChangeDestination(event) {
-  //   // console.log('Selected file:', event.target.value);
-  //   this.setState({ pattern: event.target.value });
-  // }
-  handleChangeReplaceTo(event) {
-    // console.log('Selected file:', event.target.value);
+  handleChangeReplaceTo = (event) => {
     this.setState({ replaceTo: event.target.value });
   }
 
@@ -141,47 +90,30 @@ class ResizeTab extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  receiveListFile = (data) => {
+    this.setState({
+      files: [...data.listFile],
+      srcOpenFile: data.fileName
+    });
+  }
+
+  receiveFileSave = (fileSave) => {
+    this.setState({
+      des: fileSave
+    });
+  }
+
   render() {
     const { classes } = this.props;
     const { files, selected } = this.state;
 
     return (
-      <Grid container spacing={2}>
+      <Grid container >
         <Grid item xs={3}>
           <Paper className={classes.paper}>
-            <Button variant="contained" color="primary" className={classes.button} onClick={this.onClickSource}>
-              Choose Source
-              <CloudUploadIcon className={classes.rightIcon} />
-            </Button>
-            <TextField
-              id="outlined-full-width"
-              label="Source folder"
-              style={{ marginTop: 8 }}
-              placeholder="Select folder with button above"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={this.state.src}
-              onChange={this.handleChangeSource}
-            />
-            <TextField
-              id="outlined-full-width"
-              label="Destination folder"
-              style={{ marginTop: 8 }}
-              placeholder="Select folder with button above"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={this.state.src}
-              onChange={this.handleChangeSource}
-            />
-            <Paper >
+            <FileChooser listFile={this.receiveListFile}/>
+            <FileChooserSave fileSave={this.receiveFileSave}/>
+            <Paper>
               <TextField
                 id="outlined-with-placeholder"
                 label="Width"
@@ -204,14 +136,14 @@ class ResizeTab extends React.Component {
               />
             </Paper>
             <Button
-              variant="outlined"
-              color="secondary"
-              style={{ marginTop: 8 }}
-              className={classes.button}
-              onClick={this.onClickRename}
-            >
-              RE SIZE
-            </Button>
+                variant="outlined"
+                color="secondary"
+                style={{ marginTop: 8 }}
+                className={classes.button}
+                onClick={this.onClickResize}
+              >
+                RE SIZE
+              </Button>
           </Paper>
         </Grid>
         <Grid item xs={9}>
@@ -227,7 +159,7 @@ class ResizeTab extends React.Component {
                     />
                   </TableCell>
                   <TableCell >Name</TableCell>
-                  <TableCell >New Name</TableCell>
+                  <TableCell >Demension</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -244,6 +176,7 @@ class ResizeTab extends React.Component {
                       clickCheckbox={this.handleClick}
                       selected={this.state.selected}
                       rename={this.onClickRename}
+                      // propsNameImg={this.receiveNameImg}
                     />
                   );
                 })}
