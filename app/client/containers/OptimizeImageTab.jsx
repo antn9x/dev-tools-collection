@@ -18,7 +18,7 @@ import { OPTIMIZE, GET_FOLDER_FILES } from '../../constant.message';
 import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality } from '../storage/OptimizeImageTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
-import css from'./OptimizeImageTab.css';
+import css from './OptimizeImageTab.css';
 
 const { dialog } = remote;
 
@@ -90,20 +90,25 @@ class OptimizeImageTab extends React.Component {
         }, (fileNames) => this.selectFileCallback(fileNames, src));
     }
 
+    onClickDestination = (src) => {
+        dialog.showOpenDialog({
+            title: "Select the a folder.",
+            properties: ['openDirectory']
+        }, (fileNames) => this.selectFileCallback(fileNames, src));
+    }
+
     handleChangeSource(event) {
-        // console.log('Selected file:', event.target.value);
         this.setState({ src: event.target.value });
     }
 
     handleChangeJPGQuality(event) {
-        // console.log('Selected file:', event.target.value);
         this.setState({ quality: event.target.value });
     }
 
     handleChangeDestination(event) {
-        // console.log('Selected file:', event.target.value);
         this.setState({ des: event.target.value });
     }
+
     handleSelectAllClick = event => {
         if (event.target.checked) {
             this.setState(state => ({ selected: state.files.map((file, index) => index) }));
@@ -111,7 +116,8 @@ class OptimizeImageTab extends React.Component {
         }
         this.setState({ selected: [] });
     }
-    handleClick = (event, id) => {
+
+    handleClick = (id) => {
         const { selected } = this.state;
         const selectedIndex = selected.indexOf(id);
         let newSelected = [];
@@ -211,26 +217,21 @@ class OptimizeImageTab extends React.Component {
                         />
                       </TableCell>
                       <TableCell >Name</TableCell>
-                      <TableCell >New Name</TableCell>
-                      <TableCell />
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
                     {files.map((file, index) => {
-                                    const isSelected = this.isSelected(index);
-
-                                    return (
-                                      <FileOptimizeRow
-                                        key="OptimizeImageTab"
-                                        file={file}
-                                        isSelected={isSelected}
-                                        clickCheckbox={this.handleClick}
-                                        selected={this.state.selected}
-                                        rename={this.onClickOptimize}
-                                      />
-                                    );
-                                })}
+                        const isSelected = this.isSelected(index);
+                        return (
+                          <FileOptimizeRow
+                            key="OptimizeImageTab"
+                            fileName={file.base}
+                            isSelected={isSelected}
+                            clickCheckbox={() => this.handleClick(index)}
+                          />
+                        );
+                    })}
                   </TableBody>
                 </Table>
               </Paper>
@@ -244,4 +245,4 @@ OptimizeImageTab.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default  withStyles(styles)(OptimizeImageTab);
+export default withStyles(styles)(OptimizeImageTab);
