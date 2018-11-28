@@ -109,6 +109,7 @@ class ResizeTab extends React.Component {
     // console.log('Selected file:', event.target.value);
     this.setState({ replaceTo: event.target.value });
   }
+
   handleSelectAllClick = event => {
     if (event.target.checked) {
       this.setState(state => ({ selected: state.files.map((file, index) => index) }));
@@ -116,6 +117,7 @@ class ResizeTab extends React.Component {
     }
     this.setState({ selected: [] });
   }
+  
   handleClick = (event, id) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
@@ -154,7 +156,7 @@ class ResizeTab extends React.Component {
             <TextField
               id="outlined-full-width"
               label="Source folder"
-              style={{ margin: 8 }}
+              style={{ marginTop: 8 }}
               placeholder="Select folder with button above"
               fullWidth
               margin="normal"
@@ -168,7 +170,7 @@ class ResizeTab extends React.Component {
             <TextField
               id="outlined-full-width"
               label="Destination folder"
-              style={{ margin: 8 }}
+              style={{ marginTop: 8 }}
               placeholder="Select folder with button above"
               fullWidth
               margin="normal"
@@ -179,29 +181,32 @@ class ResizeTab extends React.Component {
               value={this.state.src}
               onChange={this.handleChangeSource}
             />
-            <TextField
-              id="outlined-with-placeholder"
-              label="Width"
-              placeholder="100px"
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              value={this.state.pattern}
-              onChange={this.handleChangeDestination}
-            />
-            <TextField
-              id="outlined-with-placeholder"
-              label="Height"
-              placeholder="100px"
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              value={this.state.replaceTo}
-              onChange={this.handleChangeReplaceTo}
-            />
+            <Paper >
+              <TextField
+                id="outlined-with-placeholder"
+                label="Width"
+                placeholder="100px"
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                value={this.state.pattern}
+                onChange={this.handleChangeDestination}
+              />
+              <TextField
+                id="outlined-with-placeholder"
+                label="Height"
+                placeholder="100px"
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                value={this.state.replaceTo}
+                onChange={this.handleChangeReplaceTo}
+              />
+            </Paper>
             <Button
               variant="outlined"
               color="secondary"
+              style={{ marginTop: 8 }}
               className={classes.button}
               onClick={this.onClickRename}
             >

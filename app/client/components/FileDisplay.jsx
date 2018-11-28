@@ -27,7 +27,7 @@ class FileDisplay extends Component {
 
     render() {
         const { clickCheckbox, isSelected, file } = this.props;
-        // const { newName } = this.state;
+        const { newName } = this.state;
         const oldName = file.base
 
         return (
@@ -46,18 +46,9 @@ class FileDisplay extends Component {
                 margin="normal"
                 variant="outlined"
                 fullWidth="true"
-                value={this.state.newName}
+                value={newName}
                 onChange={this.handleChangeName}
               />
-            </TableCell>
-            <TableCell>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => this.handleRename()}
-              >
-                        RE NAME
-              </Button>
             </TableCell>
           </TableRow>
         );
