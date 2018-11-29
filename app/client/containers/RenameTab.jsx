@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
+import { GET_FOLDER_FILES } from '../../constant.message';
+
 import FileChooser from '../components/FileChooser';
 // import AllFile from '../components/AllFiles';
 
@@ -25,13 +27,18 @@ class RenameTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      folderPath: ''
+      src: '',
+      files: []
     };
   }
 
-  handleGetFolderPath = (sender, response) => {
-    this.setState({
-      folderPath: response
+  handleGetFolderPath = (src) => {
+    ipcRenderer.send(GET_FOLDER_FILES, { src });
+    ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+      this.setState({
+        files: response,
+        src
+      });
     });
   }
 
@@ -80,8 +87,8 @@ class RenameTab extends React.Component {
       <Grid container spacing={8}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
-            <FileChooser onChosenFolder={this.handleGetFolderPath} />
-            <FileChooser onChosenFolder={this.handleGetFolderPath} />
+            <FileChooser onChosenFolder={this.handleGetFolderPath} label="Source folder" />
+            <FileChooser onChosenFolder={this.handleGetFolderPath} label="Destination folder" />
           </Paper>
         </Grid>
         <Grid item xs={9}>
