@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import { Grid, Paper, Button } from '@material-ui/core/';
 
-import { GET_FOLDER_FILES } from '../../constant.message';
+import sass from './RenameTab.scss';
+
+import { GET_FOLDER_FILES, MODIFY_EXT } from '../../constant.message';
 
 import FileChooser from '../components/FileChooser';
-// import AllFile from '../components/AllFiles';
-
-const { dialog } = remote;
+import AllFile from '../components/AllFiles';
+import FileRenameFunc from '../components/FileRenameFunc';
 
 const styles = theme => ({
   root: {
@@ -18,7 +18,6 @@ const styles = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 2,
-    textAlign: 'center',
     color: theme.palette.text.secondary,
   },
 });
@@ -28,7 +27,9 @@ class RenameTab extends React.Component {
     super(props);
     this.state = {
       src: '',
-      files: []
+      files: [],
+      oldExt: '',
+      newExt: ''
     };
   }
 
@@ -42,45 +43,38 @@ class RenameTab extends React.Component {
     });
   }
 
-  onClickSource = (src) => {
-    dialog.showOpenDialog({
-      title: "Select the a folder.",
-      properties: ['openDirectory']
-    }, (fileNames) => this.selectFileCallback(fileNames, src));
+  handleOldExt = (oldExt) => {
+    this.setState({
+      oldExt
+    });
   }
 
-  handleSelectAllClick = event => {
-    if (event.target.checked) {
-      this.setState(state => ({ selected: state.files.map((file, index) => index) }));
+  handleNewExt = (newExt) => {
+    this.setState({
+      newExt
+    });
+  }
+
+  handleModifyExt = () => {
+    const { src, oldExt, newExt } = this.state;
+
+    if (!oldExt || !newExt) {
+      console.log('Not null');
       return;
     }
-    this.setState({ selected: [] });
+
+    const newExtName = newExt.indexOf('.') !== -1 ? newExt : `.${newExt}`;
+    const oldExtName = oldExt.indexOf('.') !== -1 ? oldExt : `.${oldExt}`;
+
+    ipcRenderer.send(MODIFY_EXT, { src, oldExtName, newExtName });
+    ipcRenderer.once(MODIFY_EXT, (sender, response) => {
+      console.log(response);
+      this.handleGetFolderPath(src);
+    });
   }
 
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
-
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
-
   render() {
+    const { files, src, oldExt, newExt } = this.state;
     const { classes } = this.props;
 
     return (
@@ -89,14 +83,27 @@ class RenameTab extends React.Component {
           <Paper className={classes.paper}>
             <FileChooser onChosenFolder={this.handleGetFolderPath} label="Source folder" />
             <FileChooser onChosenFolder={this.handleGetFolderPath} label="Destination folder" />
+
+            <form className={sass['modify-ext']}>
+              <FileRenameFunc defaultExt={oldExt} ext={this.handleOldExt} label="Old Ext" />
+              <FileRenameFunc defaultExt={newExt} ext={this.handleNewExt} label="New Ext" />
+              <Button
+                className={sass['modify-btn']}
+                variant="contained"
+                color="primary"
+                onClick={this.handleModifyExt}
+              >Modify
+              </Button>
+            </form>
           </Paper>
         </Grid>
         <Grid item xs={9}>
-          {/* <Paper className={classes.paper}>
+          <Paper className={classes.paper}>
             <AllFile
-              
+              files={files}
+              src={src}
             />
-          </Paper> */}
+          </Paper>
         </Grid>
       </Grid>
     );
