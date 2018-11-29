@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import RenameTab from './components/RenameTab';
+import RenameTab from './containers/RenameTab';
 import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
 
