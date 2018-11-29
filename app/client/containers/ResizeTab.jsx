@@ -14,7 +14,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
-import { GET_FOLDER_FILES } from '../../constant.message';
+import { GET_FOLDER_FILES, RE_SIZE } from '../../constant.message';
 
 const styles = theme => ({
   root: {
@@ -39,7 +39,6 @@ class ResizeTab extends React.Component {
       width: '',
       height: ''
     };
-
   }
 
   onClickResize = () => {
@@ -63,13 +62,16 @@ class ResizeTab extends React.Component {
     const resize = {
       src: fileOpen,
       des: fileSave,
-      listName: selected,
+      listName: selected.map(file=>`${file.item.subPath}/${file.item.base}`),
       width,
       height
     };
 
     console.log(resize);
-
+    ipcRenderer.send(RE_SIZE, resize);
+    ipcRenderer.once(RE_SIZE, (sender, response) => {
+      console.log(response);
+    });
   }
 
   handleChangeDestination = (event) => {
@@ -84,39 +86,32 @@ class ResizeTab extends React.Component {
 
   handleSelectAllClick = event => {
     if (event.target.checked) {
-      this.setState(
-        state => ({ selected: state.files.map((file, index) => index) })
-      );
-
+      this.setState({
+          selected: this.state.files
+      });
       return;
     }
+
     this.setState({ 
       selected: [] 
     });
   }
 
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-    
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+  handleClick = (data) => {
+    const { files, selected, fileOpen, fileSave, width, height} = this.state;
+    console.log(data);
+    this.setState({ 
+      selected: files.filter(el => el.check === true)
+    });
 
-    this.setState({ selected: newSelected });
+    const dataResize = {
+      src: fileOpen,
+      listName: selected,
+      des: fileSave,
+      width,
+      height
+    };
   };
-
-  // isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 
   receiveFileSave = (fileSave) => {
@@ -130,10 +125,20 @@ class ResizeTab extends React.Component {
   onChosenSource = (src) => {
     ipcRenderer.send(GET_FOLDER_FILES, { src });
     ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-      this.setState({
-        files: response,
-        fileOpen: src
+    let listData = [];
+    response.forEach(el => {
+      listData.push({
+        check: true,
+        item: el
       });
+    });
+
+    this.setState({
+      files: listData,
+      fileOpen: src,
+      selected: listData
+    });
+      
     });
   }
 
@@ -163,6 +168,7 @@ class ResizeTab extends React.Component {
                 variant="outlined"
                 value={width}
                 onChange={this.handleChangeDestination}
+                // defaultValue={100}
               />
               <TextField
                 id="outlined-with-placeholder"
@@ -173,6 +179,7 @@ class ResizeTab extends React.Component {
                 variant="outlined"
                 value={height}
                 onChange={this.handleChangeReplaceTo}
+                // defaultValue={100}
               />
             </Paper>
             <Button
@@ -205,17 +212,13 @@ class ResizeTab extends React.Component {
 
               <TableBody>
                 {files.map((file, index) => {
-                  // const isSelected = this.isSelected(index);
-                  
                   return (
                     <FileDisplay
                       key={index}
                       file={file}
                       height={height}
                       width={width}
-                      // isSelected={isSelected}
                       clickCheckbox={this.handleClick}
-                      selected={this.state.selected}
                     />
                   );
                 })}

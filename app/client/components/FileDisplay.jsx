@@ -7,22 +7,22 @@ import TextField from '@material-ui/core/TextField';
 // import path from 'path';
 
 class FileDisplay extends Component {
-
   checkFile = () => {
-    this.props.clickCheckbox(null,this.props.file);
+    this.props.file.check = ! this.props.file.check;
+    this.props.clickCheckbox(this.props.file);
   }
 
   render() {
-    const { file} = this.props;
+    const { file } = this.props;
     const demension = `${this.props.width} x ${this.props.height}`;
-    const oldName = file.base;
+    const oldName = file.item.base;
     
     return (
       <TableRow >
         <TableCell padding="checkbox">
           <Checkbox
             onClick={this.checkFile}
-            // onChange={isSelected}
+            checked={file.check}
           />
         </TableCell>
         <TableCell style={{ fontSize: 14 }}>{oldName}</TableCell>
@@ -34,6 +34,7 @@ class FileDisplay extends Component {
             variant="outlined"
             fullWidth="true"
             value={demension}
+            
           />
         </TableCell>
       </TableRow>
@@ -43,7 +44,6 @@ class FileDisplay extends Component {
 
 FileDisplay.propTypes = {
     clickCheckbox: PropTypes.func.isRequired,
-    // isSelected: PropTypes.func.isRequired,
     file: PropTypes.object.isRequired,
     width: PropTypes.string.isRequired,
     height: PropTypes.string.isRequired

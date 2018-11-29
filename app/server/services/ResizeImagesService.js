@@ -59,8 +59,9 @@ export const resizeAllImages = (imageListData) => {
     src,
     des,
     nameList,
-    qualityRange
+    width,
+    height
   } = imageListData;
 
-  return Promise.all(nameList.map(name => genDataImagesList(src, des, name, qualityRange)).map(resizeListImages));
+  return Promise.all(nameList.map(name => genDataImagesList(src, des, name, width, height)).map(resizeListImages));
 };
