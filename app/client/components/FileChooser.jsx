@@ -1,12 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { remote } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/FolderShared';
+import PropTypes from 'prop-types';
 
-import { getLastResizeFolder } from '../storage/ResizeTabData';
+import { GET_FOLDER_FILES } from '../../constant.message';
+import { getLastResizeFolder, setLastResizeFolder } from '../storage/ResizeTabData';
 
 const { dialog } = remote;
 
@@ -21,22 +22,38 @@ const styles = theme => ({
   },
 });
 
-class FileChooseSave extends React.Component {
+class FileChooser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       src: getLastResizeFolder(),
+      files: []
     };
   }
 
   selectFileCallback = (fileNames) => {
     if (fileNames === undefined) {
-      return console.log("undefined");
-    }
+      console.log("No file selected");
 
-    this.props.fileSave(fileNames);
+    } else {
+      console.log("file selected", fileNames);
+      const src = fileNames[0];
+      this.setState({ src });
+      setLastResizeFolder(src);
+      ipcRenderer.send(GET_FOLDER_FILES, { src });
+      ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+
+        this.setState({
+          files: [...response]
+        });
+
+        this.props.listFile({
+          fileName: fileNames,
+          listFile: this.state.files
+        });
+      });
+    }
   }
-  
 
   onClickSource = (src) => {
     dialog.showOpenDialog({
@@ -45,7 +62,12 @@ class FileChooseSave extends React.Component {
     }, (fileNames) => this.selectFileCallback(fileNames, src));
   }
 
+  handleChangeSource = (event) => {
+    this.setState({ src: event.target.value });
+  }
+
   render() {
+
     return (
       <Grid style={{ display: "flex" }} >
         <TextField
@@ -68,8 +90,8 @@ class FileChooseSave extends React.Component {
   }
 }
 
-FileChooseSave.propTypes = {
-  fileSave : PropTypes.object.isRequired
+FileChooser.propTypes = {
+  listFile: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(FileChooseSave);
+export default withStyles(styles)(FileChooser);

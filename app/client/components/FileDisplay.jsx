@@ -4,7 +4,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import path from 'path';
 
 class FileDisplay extends Component {
@@ -29,8 +28,8 @@ class FileDisplay extends Component {
 
     render() {
         const { isSelected, file } = this.props;
-        const demension = `${this.props.width} x ${this.props.height}`
-        const oldName = file.base
+        const demension = `${this.props.width} x ${this.props.height}`;
+        const oldName = file.base;
 
         return (
           <TableRow selected={isSelected}>
@@ -59,10 +58,11 @@ class FileDisplay extends Component {
 }
 
 FileDisplay.propTypes = {
-    clickCheckbox: PropTypes.object.isRequired,
     isSelected: PropTypes.object.isRequired,
     rename: PropTypes.object.isRequired,
     file: PropTypes.object.isRequired,
+    width: PropTypes.object.isRequired,
+    height: PropTypes.object.isRequired
 };
 
 export default FileDisplay;

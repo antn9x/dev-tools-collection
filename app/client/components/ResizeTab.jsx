@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer, remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -13,11 +12,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import FileDisplay from './FileDisplay';
-import FileChoose from './FileChoose';
+import FileChooser from './FileChooser';
 import FileChooseSave from './FileChooseSave';
-
-import { getLastResizeFolder } from '../storage/ResizeTabData';
-
 
 const styles = theme => ({
   root: {
@@ -35,7 +31,6 @@ class ResizeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      src: getLastResizeFolder(),
       selected: [],
       files: [],
       fileOpen: '',
@@ -43,27 +38,27 @@ class ResizeTab extends React.Component {
       width: '',
       height: ''
     };
-    
+
     this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
   }
 
   onClickResize = () => {
-
-    var resize ={
+    const resize = {
       src: this.state.fileOpen,
       des: this.state.fileSave,
-      listName:[],
+      listName: [],
       width: this.state.width,
       height: this.state.height
     };
-    console.log(resize);
-    
 
+    console.log(resize);
+        
   }
+
   handleChangeDestination = (event) => {
     this.setState({
       width: event.target.value
-    })
+    });
   }
 
   handleChangeReplaceTo = (event) => {
@@ -77,7 +72,7 @@ class ResizeTab extends React.Component {
     }
     this.setState({ selected: [] });
   }
-  
+
   handleClick = (event, id) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
@@ -101,34 +96,33 @@ class ResizeTab extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  receivelistFile = (data) => {
+  receiveListFile = (data) => {
     this.setState({
       files: data.listFile,
-      fileOpen : data.fileName
-    })
-    console.log(data);
-    
+      fileOpen: data.fileName
+    });
   }
 
-  fileSave = (fileSave) => {
+  receiveFileSave = (fileSave) => {
     this.setState({
-      fileSave: fileSave,
-    })
-
-    console.log(fileSave);
-    
+      fileSave: fileSave[0],
+    });
   }
 
   render() {
     const { classes } = this.props;
-    const { files, selected, height, width  } = this.state;
+    const { files, selected, height, width } = this.state;
 
     return (
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
-            <FileChoose listFile={this.receivelistFile}/>
-            <FileChooseSave fileSave={this.fileSave}/>
+            <FileChooser
+              listFile={this.receiveListFile}
+            />
+            <FileChooseSave
+              fileSave={this.receiveFileSave}
+            />
             <Paper >
               <TextField
                 id="outlined-with-placeholder"
@@ -176,16 +170,15 @@ class ResizeTab extends React.Component {
                   </TableCell>
                   <TableCell >Name</TableCell>
                   <TableCell >Demension</TableCell>
-                  <TableCell/>
                 </TableRow>
               </TableHead>
 
               <TableBody>
                 {files.map((file, index) => {
                   const isSelected = this.isSelected(index);
-                  
+
                   return (
-                    <FileDisplay
+                    <FileDisplay 
                       key={index}
                       file={file}
                       height={height}

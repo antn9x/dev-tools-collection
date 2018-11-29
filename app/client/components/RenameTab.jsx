@@ -2,10 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ipcRenderer, remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -21,8 +18,6 @@ import { RENAME, GET_FOLDER_FILES, RENAME_ALL } from '../../constant.message';
 const { dialog } = remote;
 
 const SRC_LAST_RENAME_FOLDER = 'src_Last_Rename_folder';
-const SRC_LAST_RENAME_PATTERN = 'src_Last_Rename_pattern';
-const SRC_LAST_RENAME_REPLACE_TO = 'src_Last_Rename_replace_to';
 
 const styles = theme => ({
   root: {
@@ -115,9 +110,9 @@ class RenameTab extends React.Component {
   //   // console.log('Selected file:', event.target.value);
   //   this.setState({ pattern: event.target.value });
   // }
-  handleChangeReplaceTo(event) {
+  handleChangeReplaceTo() {
     // console.log('Selected file:', event.target.value);
-    this.setState({ replaceTo: event.target.value });
+    this.setState({ });
   }
   handleSelectAllClick = event => {
     if (event.target.checked) {
@@ -237,11 +232,12 @@ class RenameTab extends React.Component {
           </Button>
 
           <Button
-          variant="contained"
-          color="secondary"
-          aria-owns={open ? 'change-ext-popper' : undefined}
-          aria-haspopup="true"
-          onClick={this.handleOpenPopup}>
+            variant="contained"
+            color="secondary"
+            aria-owns={open ? 'change-ext-popper' : undefined}
+            aria-haspopup="true"
+            onClick={this.handleOpenPopup}
+          >
             Change Extname
           </Button>
 
@@ -251,10 +247,11 @@ class RenameTab extends React.Component {
         </div>
 
         <ExtPopover
-        open={open}
-        closePopup={this.handleClosePopup}
-        anchorEl={anchorEl}
-        renameExt={this.handleRenameExt} />
+          open={open}
+          closePopup={this.handleClosePopup}
+          anchorEl={anchorEl}
+          renameExt={this.handleRenameExt} 
+        />
 
         <Table>
           <TableHead>
@@ -263,26 +260,27 @@ class RenameTab extends React.Component {
                 <Checkbox
                   indeterminate={selected.length > 0 && selected.length < filesInfo.length}
                   checked={filesInfo.length !== 0 && selected.length === filesInfo.length}
-                  onChange={this.handleSelectAllClick} />
+                  onChange={this.handleSelectAllClick} 
+                />
               </TableCell>
               <TableCell>Name</TableCell>
               {/* <TableCell>New Name</TableCell> */}
-              <TableCell></TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {filesInfo.map((eachFileInfo, index) => {
               const isSelected = this.isSelected(index);
-              
+
               return (
                 <File
-                key={index}
-                eachFileInfo={eachFileInfo}
-                isSelected={isSelected}
-                clickCheckbox={this.handleClick}
-                selected={this.state.selected} />
-              )
+                  key={index}
+                  eachFileInfo={eachFileInfo}
+                  isSelected={isSelected}
+                  clickCheckbox={this.handleClick}
+                  selected={this.state.selected}
+                />
+              );
             })}
           </TableBody>
         </Table>

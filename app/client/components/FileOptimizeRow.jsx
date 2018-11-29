@@ -56,7 +56,7 @@ class FileOptimizeRow extends Component {
                 color="secondary"
                 onClick={() => this.handleRename()}
               >
-                        RE NAME
+              RE NAME
               </Button>
             </TableCell>
           </TableRow>
