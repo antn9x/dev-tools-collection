@@ -3,7 +3,7 @@ import { GET_FOLDER_FILES, RENAME, RENAME_ALL, OPTIMIZE, RE_SIZE } from "../../c
 // import onRename from "../services/RenameService";
 import { onRenameAll } from '../services/RenameService';
 import getFilesInFolder from "../services/FilesService";
-import { optimizeAllImages } from "../services/OptimizeImageService";
+import OptimizeAllImages from "../services/OptimizeImageService";
 import { resizeAllImages } from "../services/ResizeImagesService";
 // import Logger from "../utils/Logger";
 
@@ -17,7 +17,6 @@ async function handleLister(event, data, name) {
         //     break;
         case GET_FOLDER_FILES:
             response = await getFilesInFolder(data);
-            // Logger.info('  case GET_FOLDER_FILES:')
             break;
         case RENAME_ALL:
             onRenameAll(data);
@@ -26,7 +25,7 @@ async function handleLister(event, data, name) {
             resizeAllImages(data);
             break;
         case OPTIMIZE:
-            optimizeAllImages(data);
+            OptimizeAllImages(data);
             break;
 
         default:
