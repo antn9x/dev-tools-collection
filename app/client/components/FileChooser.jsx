@@ -1,12 +1,11 @@
 import React from 'react';
-import { ipcRenderer, remote } from 'electron';
+import { remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import CloudUploadIcon from '@material-ui/icons/FolderShared';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
 import PropTypes from 'prop-types';
 
-import { GET_FOLDER_FILES } from '../../constant.message';
 
 const { dialog } = remote;
 
@@ -23,31 +22,31 @@ const styles = theme => ({
 
 class FileChooser extends React.Component {
 
+  state = {
+    src: ''
+  }
+
   selectFileCallback = (fileNames) => {
     if (fileNames === undefined) {
       console.log("No file selected");
-
     } else {
       console.log("file selected", fileNames);
       const src = fileNames[0];
-      // this.setState({ src });
-      ipcRenderer.send(GET_FOLDER_FILES, { src });
-      ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-        this.props.onChosenFolder(src, response);
-      });
+      this.setState({ src });
+      this.props.onChosenFolder(src);
     }
   }
 
-  onClickSource = (src) => {
+  onClickSource = () => {
     dialog.showOpenDialog({
       title: "Select the a folder.",
       properties: ['openDirectory']
-    }, (fileNames) => this.selectFileCallback(fileNames, src));
+    }, this.selectFileCallback);
   }
 
-  // handleChangeSource = (event) => {
-    // this.setState({ src: event.target.value });
-  // }
+  handleChangeSource = (event) => {
+    this.setState({ src: event.target.value });
+  }
 
   render() {
 
@@ -55,19 +54,19 @@ class FileChooser extends React.Component {
       <Grid style={{ display: "flex" }} >
         <TextField
           id="outlined-full-width"
-          label="Source folder"
+          label={this.props.label}
           style={{ marginTop: 8 }}
-          placeholder="Select folder with button above"
+          placeholder="Select folder with button"
           fullWidth
           margin="normal"
           variant="outlined"
           InputLabelProps={{
             shrink: true,
           }}
-          // value={this.state.src}
+          value={this.state.src}
           onChange={this.handleChangeSource}
         />
-        <CloudUploadIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
+        <FolderSharedIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
       </Grid>
     );
   }
@@ -75,6 +74,7 @@ class FileChooser extends React.Component {
 
 FileChooser.propTypes = {
   onChosenFolder: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(FileChooser);
