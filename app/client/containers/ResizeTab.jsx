@@ -211,8 +211,8 @@ class ResizeTab extends React.Component {
               </TableHead>
 
               <TableBody>
-                {files.map((file, index) => {
-                  return (
+                {
+                  files.map((file, index) => (
                     <FileDisplay
                       key={index}
                       file={file}
@@ -220,8 +220,8 @@ class ResizeTab extends React.Component {
                       width={width}
                       clickCheckbox={this.handleClick}
                     />
-                  );
-                })}
+                  ))
+                }
               </TableBody>
             </Table>
           </Paper>
