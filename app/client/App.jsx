@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import RenameTab from './components/RenameTab';
-import ResizeTab from './components/ResizeTab';
+import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
 
 function TabContainer(props) {

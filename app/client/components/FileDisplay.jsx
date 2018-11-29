@@ -4,11 +4,11 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-import path from 'path';
+// import path from 'path';
 
 class FileDisplay extends Component {
     state = {
-        newName: this.props.file.base
+        // newName: this.props.file.base
     }
 
     // handleChangeName = (event) => {
@@ -19,12 +19,12 @@ class FileDisplay extends Component {
     //     });
     // }
 
-    handleRename = () => {
-        const oldName = path.basename(this.props.file.path);
-        const filePath = path.dirname(this.props.file.path);
-        const {newName} = this.state;
-        this.props.rename(filePath, oldName, newName);
-    }
+    // handleRename = () => {
+    //     const oldName = path.basename(this.props.file.path);
+    //     const filePath = path.dirname(this.props.file.path);
+    //     const {newName} = this.state;
+    //     this.props.rename(filePath, oldName, newName);
+    // }
 
     render() {
         const { isSelected, file } = this.props;
@@ -59,10 +59,10 @@ class FileDisplay extends Component {
 
 FileDisplay.propTypes = {
     isSelected: PropTypes.object.isRequired,
-    rename: PropTypes.object.isRequired,
+    // rename: PropTypes.object.isRequired,
     file: PropTypes.object.isRequired,
-    width: PropTypes.object.isRequired,
-    height: PropTypes.object.isRequired
+    width: PropTypes.string.isRequired,
+    height: PropTypes.string.isRequired
 };
 
 export default FileDisplay;

@@ -11,9 +11,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
-import FileDisplay from './FileDisplay';
-import FileChooser from './FileChooser';
-import FileChooseSave from './FileChooseSave';
+import FileDisplay from '../components/FileDisplay';
+import FileChooser from '../components/FileChooser';
 
 const styles = theme => ({
   root: {
@@ -52,7 +51,7 @@ class ResizeTab extends React.Component {
     };
 
     console.log(resize);
-        
+
   }
 
   handleChangeDestination = (event) => {
@@ -96,17 +95,24 @@ class ResizeTab extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  receiveListFile = (data) => {
-    this.setState({
-      files: data.listFile,
-      fileOpen: data.fileName
-    });
-  }
 
   receiveFileSave = (fileSave) => {
     this.setState({
       fileSave: fileSave[0],
     });
+    console.log(fileSave);
+    
+  }
+
+  onChosenSource = (fileOpen, files) => {
+    this.setState({
+      files,
+      fileOpen
+    });
+
+    console.log(fileOpen);
+    console.log(files);
+        
   }
 
   render() {
@@ -118,10 +124,10 @@ class ResizeTab extends React.Component {
         <Grid item xs={3}>
           <Paper className={classes.paper}>
             <FileChooser
-              listFile={this.receiveListFile}
+              onChosenFolder={this.onChosenSource}
             />
-            <FileChooseSave
-              fileSave={this.receiveFileSave}
+            <FileChooser
+              onChosenFolder={this.receiveFileSave}
             />
             <Paper >
               <TextField
@@ -178,7 +184,7 @@ class ResizeTab extends React.Component {
                   const isSelected = this.isSelected(index);
 
                   return (
-                    <FileDisplay 
+                    <FileDisplay
                       key={index}
                       file={file}
                       height={height}
@@ -186,7 +192,7 @@ class ResizeTab extends React.Component {
                       isSelected={isSelected}
                       // clickCheckbox={this.handleClick}
                       selected={this.state.selected}
-                      rename={this.onClickResize}
+                      // rename={this.onClickResize}
                     />
                   );
                 })}

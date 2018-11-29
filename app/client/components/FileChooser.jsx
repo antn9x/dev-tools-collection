@@ -7,7 +7,6 @@ import CloudUploadIcon from '@material-ui/icons/FolderShared';
 import PropTypes from 'prop-types';
 
 import { GET_FOLDER_FILES } from '../../constant.message';
-import { getLastResizeFolder, setLastResizeFolder } from '../storage/ResizeTabData';
 
 const { dialog } = remote;
 
@@ -23,13 +22,6 @@ const styles = theme => ({
 });
 
 class FileChooser extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      src: getLastResizeFolder(),
-      files: []
-    };
-  }
 
   selectFileCallback = (fileNames) => {
     if (fileNames === undefined) {
@@ -38,19 +30,10 @@ class FileChooser extends React.Component {
     } else {
       console.log("file selected", fileNames);
       const src = fileNames[0];
-      this.setState({ src });
-      setLastResizeFolder(src);
+      // this.setState({ src });
       ipcRenderer.send(GET_FOLDER_FILES, { src });
       ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-
-        this.setState({
-          files: [...response]
-        });
-
-        this.props.listFile({
-          fileName: fileNames,
-          listFile: this.state.files
-        });
+        this.props.onChosenFolder(src, response);
       });
     }
   }
@@ -62,9 +45,9 @@ class FileChooser extends React.Component {
     }, (fileNames) => this.selectFileCallback(fileNames, src));
   }
 
-  handleChangeSource = (event) => {
-    this.setState({ src: event.target.value });
-  }
+  // handleChangeSource = (event) => {
+    // this.setState({ src: event.target.value });
+  // }
 
   render() {
 
@@ -81,7 +64,7 @@ class FileChooser extends React.Component {
           InputLabelProps={{
             shrink: true,
           }}
-          value={this.state.src}
+          // value={this.state.src}
           onChange={this.handleChangeSource}
         />
         <CloudUploadIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
@@ -91,7 +74,7 @@ class FileChooser extends React.Component {
 }
 
 FileChooser.propTypes = {
-  listFile: PropTypes.object.isRequired
+  onChosenFolder: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(FileChooser);
