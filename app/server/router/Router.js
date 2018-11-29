@@ -1,20 +1,32 @@
 import { ipcMain } from "electron";
-import { GET_FOLDER_FILES, RENAME } from "../../constant.message";
-import onRename from "../services/RenameService";
-import getFilesInFoler from "../services/FilesService";
+import { GET_FOLDER_FILES, RENAME, RENAME_ALL, OPTIMIZE, RE_SIZE } from "../../constant.message";
+// import onRename from "../services/RenameService";
+import { onRenameAll } from '../services/RenameService';
+import getFilesInFolder from "../services/FilesService";
+import { optimizeAllImages } from "../services/OptimizeImageService";
+import { resizeAllImages } from "../services/ResizeImagesService";
 // import Logger from "../utils/Logger";
 
-const listListeners = [RENAME, GET_FOLDER_FILES];
+const listListeners = [RENAME, GET_FOLDER_FILES, RENAME_ALL,OPTIMIZE, RE_SIZE];
 
 async function handleLister(event, data, name) {
     let response = '';
     switch (name) {
-        case RENAME:
-            response = await onRename(data);
-            break;
+        // case RENAME:
+        //     response = await onRename(data);
+        //     break;
         case GET_FOLDER_FILES:
-            response = await getFilesInFoler(data);
+            response = await getFilesInFolder(data);
             // Logger.info('  case GET_FOLDER_FILES:')
+            break;
+        case RENAME_ALL:
+            onRenameAll(data);
+            break;
+        case RE_SIZE:
+            resizeAllImages(data);
+            break;
+        case OPTIMIZE:
+            optimizeAllImages(data);
             break;
 
         default:

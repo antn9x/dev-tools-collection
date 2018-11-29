@@ -5,7 +5,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import RenameTab from './components/RenameTab';
+import RenameTab from './containers/RenameTab';
+import ResizeTab from './containers/ResizeTab';
+import OptimizeImageTab from './containers/OptimizeImageTab';
 
 function TabContainer(props) {
   return (
@@ -23,12 +25,13 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
+    minWidth:1000
   },
 });
 
-class SimpleTabs extends React.Component {
+class App extends React.Component {
   state = {
-    value: 0,
+    value: 2,
   };
 
   handleChange = (event, value) => {
@@ -41,7 +44,7 @@ class SimpleTabs extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Tabs value={value} onChange={this.handleChange}>
             <Tab label="Rename" />
             <Tab label="Resize Image" />
@@ -49,15 +52,15 @@ class SimpleTabs extends React.Component {
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer><RenameTab /></TabContainer>}
-        {value === 1 && <TabContainer>Item Two</TabContainer>}
-        {value === 2 && <TabContainer>Item Three</TabContainer>}
+        {value === 1 && <TabContainer><ResizeTab /></TabContainer>}
+        {value === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
       </div>
     );
   }
 }
 
-SimpleTabs.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleTabs);
+export default withStyles(styles)(App);

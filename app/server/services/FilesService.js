@@ -1,15 +1,21 @@
 import dir from 'node-dir';
-// import Logger from '../utils/Logger';
+import path from 'path';
 
-const handelFile = async (file, pattern) => {
-    // Logger.info('handle file', file, pattern);
-    if (!pattern || file.match(pattern)) {
-        // Logger.log({ baseName, basePath, newName });
-        return file;
-    }
+const handelFile = async (srcFolder, file, patternList = []) => {
+
+  if (!patternList.length || patternList.some(pat => file.match(pat))) {
+    return {
+      subPath: path.dirname(file).replace(srcFolder, ''),
+      base: path.basename(file),
+      ext: path.extname(file)
+    };
+  }
 };
 
-export default function getFilesInFoler({ src, pattern }) {
-    return dir.promiseFiles(src)
-        .then(files => Promise.all(files.map(file => handelFile(file, pattern))));
-}
+const getFilesInFolder = ({
+    src,
+    patternList
+  }) => dir.promiseFiles(src)
+  .then(files => Promise.all(files.map(file => handelFile(src, file, patternList))));
+
+export default getFilesInFolder;

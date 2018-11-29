@@ -1,0 +1,39 @@
+import fs from 'fs';
+import path from 'path';
+import {
+  Logger
+} from '../utils/Logger';
+
+function encryptDecryptBinaryXOR(input, key) {
+  const output = Buffer.alloc(input.length);
+  for (let i = 0; i < input.length; i += 1) {
+    const charCode = input[i] ^ key[i % key.length].charCodeAt(0); // eslint-disable-line
+    output[i] = ((charCode));
+  }
+  return output;
+}
+
+export const encrypt = (imageData) => {
+  const {
+    source,
+    destination,
+    key = 'encryptDecryptBinaryXOR',
+    name
+  } = imageData;
+  const fileName = path.resolve(source, name);
+  const newPath = destination ? path.join(destination, name) : fileName;
+  const fileContent = fs.readFileSync(fileName);
+  // console.log("Encrypt Open file :" + fileContent);
+  const encryptedData = encryptDecryptBinaryXOR(fileContent, key);
+  // console.log("Encrypted Open file :" + encryptedData);
+  const stream = fs.createWriteStream(newPath);
+  stream.write(encryptedData);
+  stream.end();
+  Logger.log(`Encrypted file ${fileName} to ${newPath}`);
+};
+
+/**
+ * Encrypt a list of images
+ * @param {Array} imageList 
+ */
+export const encryptListFiles = (imageList) => Promise.all(imageList.map(encrypt));
