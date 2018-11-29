@@ -7,59 +7,43 @@ import TextField from '@material-ui/core/TextField';
 // import path from 'path';
 
 class FileDisplay extends Component {
-    state = {
-        // newName: this.props.file.base
-    }
 
-    // handleChangeName = (event) => {
-    //     this.setState({
-    //         newName: event.target.value,
-    //         replaceTo: this.props.replaceTo,
-    //         pattern: this.props.pattern
-    //     });
-    // }
+  checkFile = () => {
+    this.props.clickCheckbox(null,this.props.file);
+  }
 
-    // handleRename = () => {
-    //     const oldName = path.basename(this.props.file.path);
-    //     const filePath = path.dirname(this.props.file.path);
-    //     const {newName} = this.state;
-    //     this.props.rename(filePath, oldName, newName);
-    // }
-
-    render() {
-        const { isSelected, file } = this.props;
-        const demension = `${this.props.width} x ${this.props.height}`;
-        const oldName = file.base;
-
-        return (
-          <TableRow selected={isSelected}>
-            <TableCell padding="checkbox">
-              <Checkbox
-                // onClick={clickCheckbox}
-                onChange={isSelected}
-              />
-            </TableCell>
-            <TableCell style={{ fontSize: 14 }}>{oldName}</TableCell>
-            <TableCell>
-              <TextField
-                id="outlined-with-placeholder"
-                label="Pattern"
-                margin="normal"
-                variant="outlined"
-                fullWidth="true"
-                value={demension}
-                // placeholder={demension}
-                // onChange={this.handleChangeName}
-              />
-            </TableCell>
-          </TableRow>
-        );
-    }
+  render() {
+    const { file} = this.props;
+    const demension = `${this.props.width} x ${this.props.height}`;
+    const oldName = file.base;
+    
+    return (
+      <TableRow >
+        <TableCell padding="checkbox">
+          <Checkbox
+            onClick={this.checkFile}
+            // onChange={isSelected}
+          />
+        </TableCell>
+        <TableCell style={{ fontSize: 14 }}>{oldName}</TableCell>
+        <TableCell>
+          <TextField
+            id="outlined-with-placeholder"
+            label="Pattern"
+            margin="normal"
+            variant="outlined"
+            fullWidth="true"
+            value={demension}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
 }
 
 FileDisplay.propTypes = {
-    isSelected: PropTypes.object.isRequired,
-    // rename: PropTypes.object.isRequired,
+    clickCheckbox: PropTypes.func.isRequired,
+    // isSelected: PropTypes.func.isRequired,
     file: PropTypes.object.isRequired,
     width: PropTypes.string.isRequired,
     height: PropTypes.string.isRequired

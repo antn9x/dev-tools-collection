@@ -40,16 +40,32 @@ class ResizeTab extends React.Component {
       height: ''
     };
 
-    this.handleChangeReplaceTo = this.handleChangeReplaceTo.bind(this);
   }
 
   onClickResize = () => {
+    const { fileOpen, fileSave, selected, width, height} = this.state;
+    if( fileSave === '') {
+      return alert("no path save file");
+    }
+
+    if( selected.length === 0 ) {
+      return alert("no file Resize");
+    }
+
+    if(width === ''){
+      return alert("no set width for file resize");
+    }
+
+    if(height === ''){
+      return alert('no set height for file resize');
+    }
+
     const resize = {
-      src: this.state.fileOpen,
-      des: this.state.fileSave,
-      listName: [],
-      width: this.state.width,
-      height: this.state.height
+      src: fileOpen,
+      des: fileSave,
+      listName: selected,
+      width,
+      height
     };
 
     console.log(resize);
@@ -68,17 +84,22 @@ class ResizeTab extends React.Component {
 
   handleSelectAllClick = event => {
     if (event.target.checked) {
-      this.setState(state => ({ selected: state.files.map((file, index) => index) }));
+      this.setState(
+        state => ({ selected: state.files.map((file, index) => index) })
+      );
+
       return;
     }
-    this.setState({ selected: [] });
+    this.setState({ 
+      selected: [] 
+    });
   }
 
   handleClick = (event, id) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
-
+    
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
@@ -95,12 +116,12 @@ class ResizeTab extends React.Component {
     this.setState({ selected: newSelected });
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  // isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 
   receiveFileSave = (fileSave) => {
     this.setState({
-      fileSave: fileSave[0],
+      fileSave
     });
     console.log(fileSave);
 
@@ -184,18 +205,17 @@ class ResizeTab extends React.Component {
 
               <TableBody>
                 {files.map((file, index) => {
-                  const isSelected = this.isSelected(index);
-
+                  // const isSelected = this.isSelected(index);
+                  
                   return (
                     <FileDisplay
                       key={index}
                       file={file}
                       height={height}
                       width={width}
-                      isSelected={isSelected}
-                      // clickCheckbox={this.handleClick}
+                      // isSelected={isSelected}
+                      clickCheckbox={this.handleClick}
                       selected={this.state.selected}
-                    // rename={this.onClickResize}
                     />
                   );
                 })}
