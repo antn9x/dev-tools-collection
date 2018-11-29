@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +14,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
+import { GET_FOLDER_FILES } from '../../constant.message';
 
 const styles = theme => ({
   root: {
@@ -101,18 +103,17 @@ class ResizeTab extends React.Component {
       fileSave: fileSave[0],
     });
     console.log(fileSave);
-    
+
   }
 
-  onChosenSource = (fileOpen, files) => {
-    this.setState({
-      files,
-      fileOpen
+  onChosenSource = (src) => {
+    ipcRenderer.send(GET_FOLDER_FILES, { src });
+    ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+      this.setState({
+        files: response,
+        fileOpen: src
+      });
     });
-
-    console.log(fileOpen);
-    console.log(files);
-        
   }
 
   render() {
@@ -120,13 +121,15 @@ class ResizeTab extends React.Component {
     const { files, selected, height, width } = this.state;
 
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={8}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
             <FileChooser
+              label="Source folder"
               onChosenFolder={this.onChosenSource}
             />
             <FileChooser
+              label="Destination folder"
               onChosenFolder={this.receiveFileSave}
             />
             <Paper >
@@ -192,7 +195,7 @@ class ResizeTab extends React.Component {
                       isSelected={isSelected}
                       // clickCheckbox={this.handleClick}
                       selected={this.state.selected}
-                      // rename={this.onClickResize}
+                    // rename={this.onClickResize}
                     />
                   );
                 })}
