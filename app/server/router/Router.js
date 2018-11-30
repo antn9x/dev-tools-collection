@@ -1,13 +1,13 @@
 import { ipcMain } from "electron";
-import { GET_FOLDER_FILES, RENAME, RENAME_ALL, OPTIMIZE, RE_SIZE } from "../../constant.message";
+import { GET_FOLDER_FILES, RENAME, MODIFY_EXT, OPTIMIZE, RE_SIZE } from "../../constant.message";
 // import onRename from "../services/RenameService";
-import { onRenameAll } from '../services/RenameService';
+import { modifyExt } from '../services/RenameService';
 import getFilesInFolder from "../services/FilesService";
-import { optimizeAllImages } from "../services/OptimizeImageService";
+import OptimizeAllImages from "../services/OptimizeImageService";
 import { resizeAllImages } from "../services/ResizeImagesService";
 // import Logger from "../utils/Logger";
 
-const listListeners = [RENAME, GET_FOLDER_FILES, RENAME_ALL,OPTIMIZE, RE_SIZE];
+const listListeners = [RENAME, GET_FOLDER_FILES, MODIFY_EXT, OPTIMIZE, RE_SIZE];
 
 async function handleLister(event, data, name) {
     let response = '';
@@ -17,16 +17,15 @@ async function handleLister(event, data, name) {
         //     break;
         case GET_FOLDER_FILES:
             response = await getFilesInFolder(data);
-            // Logger.info('  case GET_FOLDER_FILES:')
             break;
-        case RENAME_ALL:
-            onRenameAll(data);
+        case MODIFY_EXT:
+            modifyExt(data);
             break;
         case RE_SIZE:
             resizeAllImages(data);
             break;
         case OPTIMIZE:
-            optimizeAllImages(data);
+            OptimizeAllImages(data);
             break;
 
         default:

@@ -33,28 +33,25 @@ import replaceExt from 'replace-ext';
 //   // .then(files => Promise.all(files.map(file => handelFile(file, pattern, replaceTo))));
 // }
 
-const renameAllExt = async (src, oldExt, newExt) => {
-  const filesPath = await dir.promiseFiles(src);
-  
-  filesPath.map(eachFile => {
-    const baseName = path.basename(eachFile);
-    const extName = path.extname(eachFile);
+export const rename = () => {
 
-    if (extName !== oldExt) {
-      return;
+};
+
+export const modifyExt = async (data) => {
+  const { src, oldExtName, newExtName } = data;
+
+  const allFilesPath = await dir.promiseFiles(src);
+
+  allFilesPath.forEach(filePath => {
+    const ext = path.extname(filePath);
+
+    if (ext === oldExtName) {
+      const oldExtPath = path.resolve(filePath);
+      const newExtPath = replaceExt(oldExtPath, newExtName);
+
+      fs.renameSync(oldExtPath, newExtPath);
     }
-
-    const oldFilePath = path.resolve(src, baseName);
-    const newFilePath = replaceExt(oldFilePath, newExt);
-
-    fs.renameSync(oldFilePath, newFilePath);
   });
-}
-
-export function onRenameAll(data) {
-  const { src, oldExt, newExt } = data;
-
-  renameAllExt(src, oldExt, newExt);
 };
 
 // export default function onRename(data) {

@@ -29,8 +29,8 @@ class FileOptimizeRow extends Component {
 }
 
 FileOptimizeRow.propTypes = {
-    clickCheckbox: PropTypes.object.isRequired,
-    isSelected: PropTypes.object.isRequired,
+    clickCheckbox: PropTypes.func.isRequired,
+    isSelected: PropTypes.bool.isRequired,
     classes: PropTypes.object.isRequired,
     fileName: PropTypes.string.isRequired,
 };
