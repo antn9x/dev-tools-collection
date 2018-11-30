@@ -6,6 +6,8 @@ import { Grid, Paper, Button } from '@material-ui/core/';
 
 import sass from './RenameTab.scss';
 
+import { setLastSourceRenameFolder, getLastSourceRenameFolder } from '../storage/RenameTabData';
+
 import { GET_FOLDER_FILES, MODIFY_EXT } from '../../constant.message';
 
 import FileChooser from '../components/FileChooser';
@@ -26,7 +28,7 @@ class RenameTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      src: '',
+      src: getLastSourceRenameFolder(),
       files: [],
       oldExt: '',
       newExt: ''
@@ -36,6 +38,8 @@ class RenameTab extends React.Component {
   handleGetFolderPath = (src) => {
     ipcRenderer.send(GET_FOLDER_FILES, { src });
     ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
+      setLastSourceRenameFolder(src);
+
       this.setState({
         files: response,
         src
@@ -81,8 +85,8 @@ class RenameTab extends React.Component {
       <Grid container spacing={8}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
-            <FileChooser onChosenFolder={this.handleGetFolderPath} label="Source folder" />
-            <FileChooser onChosenFolder={this.handleGetFolderPath} label="Destination folder" />
+            <FileChooser onChosenFolder={this.handleGetFolderPath} fileFolder={src} label="Source folder" />
+            <FileChooser onChosenFolder={this.handleGetFolderPath} fileFolder={src} label="Destination folder" />
 
             <form className={sass['modify-ext']}>
               <FileRenameFunc defaultExt={oldExt} ext={this.handleOldExt} label="Old Ext" />
