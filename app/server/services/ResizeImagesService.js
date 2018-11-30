@@ -40,8 +40,6 @@ export const createThumnail = (imageData) => {
  * resize a list of images
  * @param {Array} imageList 
  */
-const resizeListImages = (imageList) => Promise.all(imageList.map(createThumnail));
-
 const genDataImagesList = (source, destination, name, width, height) => ({
   source,
   destination,
@@ -49,11 +47,11 @@ const genDataImagesList = (source, destination, name, width, height) => ({
   height,
   name,
 });
+
 /**
  * Optimize a list of images
  * @param {Object} imageListData 
  */
-
 export const resizeAllImages = (imageListData) => {
   const {
     src,
@@ -63,5 +61,5 @@ export const resizeAllImages = (imageListData) => {
     height
   } = imageListData;
 
-  return Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(resizeListImages));
+  return Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(createThumnail));
 };
