@@ -23,7 +23,11 @@ const styles = theme => ({
 class FileChooser extends React.Component {
 
   state = {
-    src: ''
+    src: this.props.fileFolder
+  }
+
+  componentWillMount() {
+    this.props.onChosenFolder(this.state.src);
   }
 
   selectFileCallback = (fileNames) => {
@@ -75,6 +79,7 @@ class FileChooser extends React.Component {
 FileChooser.propTypes = {
   onChosenFolder: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  fileFolder: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FileChooser);

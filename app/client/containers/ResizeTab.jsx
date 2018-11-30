@@ -15,6 +15,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
 import { GET_FOLDER_FILES, RE_SIZE } from '../../constant.message';
+import { getLastSourceOptimizeFolder } from '../storage/OptimizeImageTabData';
 
 const styles = theme => ({
   root: {
@@ -32,12 +33,13 @@ class ResizeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // src: getLastSourceOptimizeFolder(),
       selected: [],
       files: [],
-      fileOpen: '',
+      fileOpen: getLastSourceOptimizeFolder(),
       fileSave: '',
-      width: '',
-      height: ''
+      width: 1000,
+      height: 1000
     };
   }
 
@@ -62,7 +64,7 @@ class ResizeTab extends React.Component {
     const resize = {
       src: fileOpen,
       des: fileSave,
-      listName: selected.map(file=>`${file.item.subPath}/${file.item.base}`),
+      names: selected.map(file=>`${file.subPath}/${file.base}`),
       width,
       height
     };
@@ -84,33 +86,27 @@ class ResizeTab extends React.Component {
     this.setState({ height: event.target.value });
   }
 
-  handleSelectAllClick = event => {
-    if (event.target.checked) {
-      this.setState({
-          selected: this.state.files
-      });
-      return;
-    }
+  handleSelectAllClick = () => {
+    let listFileCheck = this.state.files.map( el => {
+      let obj = {};
+      obj = {
+        check: !el.check,
+        item: el.item
+      };
+      return obj;
+    });
 
-    this.setState({ 
-      selected: [] 
+    this.setState({
+      files: listFileCheck
     });
   }
 
-  handleClick = (data) => {
-    const { files, selected, fileOpen, fileSave, width, height} = this.state;
-    console.log(data);
+  handleClick = () => {
+    let dataSendServer = [];
+    this.state.files.filter(el => el.check === true).forEach( el => dataSendServer.push(el.item));
     this.setState({ 
-      selected: files.filter(el => el.check === true)
+      selected: dataSendServer
     });
-
-    const dataResize = {
-      src: fileOpen,
-      listName: selected,
-      des: fileSave,
-      width,
-      height
-    };
   };
 
 
@@ -136,7 +132,7 @@ class ResizeTab extends React.Component {
     this.setState({
       files: listData,
       fileOpen: src,
-      selected: listData
+      selected: response
     });
       
     });
@@ -144,7 +140,7 @@ class ResizeTab extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { files, selected, height, width } = this.state;
+    const { files, selected, height, width, fileOpen,fileSave } = this.state;
 
     return (
       <Grid container spacing={8}>
@@ -153,33 +149,35 @@ class ResizeTab extends React.Component {
             <FileChooser
               label="Source folder"
               onChosenFolder={this.onChosenSource}
+              fileFolder={fileOpen}
             />
             <FileChooser
               label="Destination folder"
               onChosenFolder={this.receiveFileSave}
+              fileFolder={fileSave}
             />
             <Paper >
               <TextField
                 id="outlined-with-placeholder"
                 label="Width"
                 placeholder="100px"
+                type="number"
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                value={width}
                 onChange={this.handleChangeDestination}
-                // defaultValue={100}
+                defaultValue={width}
               />
               <TextField
                 id="outlined-with-placeholder"
                 label="Height"
                 placeholder="100px"
+                type="number"
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                value={height}
                 onChange={this.handleChangeReplaceTo}
-                // defaultValue={100}
+                defaultValue={height}
               />
             </Paper>
             <Button
@@ -202,7 +200,7 @@ class ResizeTab extends React.Component {
                     <Checkbox
                       indeterminate={selected.length > 0 && selected.length < files.length}
                       checked={files.length !== 0 && selected.length === files.length}
-                      onChange={this.handleSelectAllClick}
+                      onClick={this.handleSelectAllClick}
                     />
                   </TableCell>
                   <TableCell >Name</TableCell>
