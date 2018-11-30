@@ -58,11 +58,11 @@ class OptimizeImageTab extends React.Component {
 
         ipcRenderer.send(OPTIMIZE, data);
         ipcRenderer.once(OPTIMIZE, (sender, response) => {
-            console.log(response);
+            console.log(OPTIMIZE, response);
         });
     }
 
-    selectFileCallback = (src) => {
+    onClickSource = (src) => {
         if (src === undefined) {
             console.log("No file selected");
         } else {
@@ -74,10 +74,6 @@ class OptimizeImageTab extends React.Component {
                 this.setState({ files });
             });
         }
-    }
-
-    onClickSource = (src) => {
-        this.selectFileCallback(src);
     }
 
     onClickDestination = (des) => {
@@ -129,17 +125,19 @@ class OptimizeImageTab extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { files, selected } = this.state;
+        const { files, selected, src, des } = this.state;
 
         return (
           <Grid container spacing={8}>
             <Grid item xs={3}>
               <Paper className={css.functions_wrapper}>
                 <FileChooser
+                  fileFolder={src}
                   label="Source folder"
                   onChosenFolder={this.onClickSource}
                 />
                 <FileChooser
+                  fileFolder={des}
                   label="Destination folder"
                   onChosenFolder={this.onClickDestination}
                 />
@@ -184,7 +182,7 @@ class OptimizeImageTab extends React.Component {
                                     const isSelected = this.isSelected(index);
                                     return (
                                       <FileOptimizeRow
-                                        key={`OptimizeImageTab${index}`} // eslint-disable-line
+                                            key={`OptimizeImageTab${index}`} // eslint-disable-line
                                         fileName={file.base}
                                         isSelected={isSelected}
                                         clickCheckbox={() => this.handleClick(index)}

@@ -1,5 +1,6 @@
 import dir from 'node-dir';
 import path from 'path';
+import fs from 'fs';
 
 const handelFile = async (srcFolder, file, patternList = []) => {
 
@@ -12,10 +13,10 @@ const handelFile = async (srcFolder, file, patternList = []) => {
   }
 };
 
-const getFilesInFolder = ({
+export const getFilesInFolder = ({
     src,
     patternList
   }) => dir.promiseFiles(src)
   .then(files => Promise.all(files.map(file => handelFile(src, file, patternList))));
 
-export default getFilesInFolder;
+export const checkFileExist = (filePath) => fs.existsSync(filePath);
