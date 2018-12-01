@@ -1,25 +1,30 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
+import { I18nextProvider } from 'react-i18next';
+
+import i18n from './i18n/i18n';
 import App from './App';
 import './app.global.css';
 
 
-render(
-  <AppContainer>
+render( <I18nextProvider i18n={i18n}>
+  <AppContainer >
     <App />
-  </AppContainer>,
-  document.getElementById('root')
+  </AppContainer>
+</I18nextProvider>// eslint-disable-line
+,document.getElementById('root')
 );
 
 if (module.hot) {
   module.hot.accept('./App', () => {
     const NextApp = require('./App'); // eslint-disable-line global-require
-    render(
-      <AppContainer>
+    render( <I18nextProvider i18n={i18n}>
+      <AppContainer >
         <NextApp />
-      </AppContainer>,
-      document.getElementById('root')
+      </AppContainer>
+    </I18nextProvider>// eslint-disable-line
+    , document.getElementById('root')
     );
   });
 }

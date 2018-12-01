@@ -160,6 +160,7 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.2.0",
+    "react-i18next": "^8.3.8",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "replace-ext": "^1.0.0",

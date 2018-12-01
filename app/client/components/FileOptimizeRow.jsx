@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import Checkbox from '@material-ui/core/Checkbox';
 
 const styles = () => ({
     textLabel: {
@@ -13,15 +12,10 @@ const styles = () => ({
 
 class FileOptimizeRow extends Component {
     render() {
-        const { clickCheckbox, isSelected, fileName, classes } = this.props;
+        const { filePath, fileName, classes } = this.props;
         return (
-          <TableRow selected={isSelected}>
-            <TableCell padding="checkbox">
-              <Checkbox
-                onClick={clickCheckbox}
-                value={isSelected}
-              />
-            </TableCell>
+          <TableRow >
+            <TableCell className={classes.textLabel}>{filePath}</TableCell>
             <TableCell className={classes.textLabel}>{fileName}</TableCell>
           </TableRow>
         );
@@ -29,8 +23,7 @@ class FileOptimizeRow extends Component {
 }
 
 FileOptimizeRow.propTypes = {
-    clickCheckbox: PropTypes.func.isRequired,
-    isSelected: PropTypes.bool.isRequired,
+    filePath: PropTypes.string.isRequired,
     classes: PropTypes.object.isRequired,
     fileName: PropTypes.string.isRequired,
 };
