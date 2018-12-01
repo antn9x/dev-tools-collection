@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -13,12 +12,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import { OPTIMIZE, GET_FOLDER_FILES } from '../../constant.message';
 import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality } from '../storage/OptimizeImageTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
 import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
+import { sendGetFolderFilesRequest, sendOptimizeRequest } from '../network/api';
 
 const styles = theme => ({
     root: {
@@ -50,29 +49,18 @@ class OptimizeImageTab extends React.Component {
             console.log('Import src pls!');
             return;
         }
-        const data = {
-            src,
-            des,
-            qualityRange: quality,
-        };
-
-        ipcRenderer.send(OPTIMIZE, data);
-        ipcRenderer.once(OPTIMIZE, (sender, response) => {
-            console.log(OPTIMIZE, response);
-        });
+        sendOptimizeRequest(src, des, quality);
     }
 
-    onClickSource = (src) => {
+    onClickSource = async (src) => {
         if (src === undefined) {
             console.log("No file selected");
         } else {
             console.log("file selected", src);
             this.setState({ src });
             setLastSourceOptimizeFolder(src);
-            ipcRenderer.send(GET_FOLDER_FILES, { src });
-            ipcRenderer.once(GET_FOLDER_FILES, (sender, files) => {
-                this.setState({ files });
-            });
+            const files = await sendGetFolderFilesRequest(src, ['jpg', 'png', 'jpeg']);
+            this.setState({ files });
         }
     }
 

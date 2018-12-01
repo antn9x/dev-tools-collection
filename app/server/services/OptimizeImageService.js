@@ -12,7 +12,7 @@ const optimizeAllImages = (imageListData) => {
     des,
     qualityRange = '65-80',
   } = imageListData;
-  return imagemin([src], des, {
+  return imagemin([`${src}/*.{jpg,png}`], des, {
     plugins: [
       imageminJpegtran(),
       imageminPngquant({
