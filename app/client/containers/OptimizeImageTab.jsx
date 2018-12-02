@@ -12,7 +12,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import { translate } from 'react-i18next';
 
-import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality } from '../storage/OptimizeImageTabData';
+import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality, setLastDestinationOptimizeFolder } from '../storage/OptimizeImageTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
 import css from './OptimizeImageTab.css';
@@ -61,13 +61,14 @@ class OptimizeImageTab extends React.Component {
             console.log("file selected", src);
             this.setState({ src });
             setLastSourceOptimizeFolder(src);
-            const files = await sendGetFolderFilesRequest(src, ['jpg', 'png', 'jpeg']);
+            const files = await sendGetFolderFilesRequest(src, ['jpg$', 'png$', 'jpeg$']);
             this.setState({ files });
         }
     }
 
     onClickDestination = (des) => {
         this.setState({ des });
+        setLastDestinationOptimizeFolder(des);
     }
 
     handleChangeSource = (event) => {
