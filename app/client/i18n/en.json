@@ -4,5 +4,9 @@
   "jpg_quality": "JPG Quality",
   "optimize": "OPTIMIZE",
   "name": "Name",
-  "path": "Path"
+  "path": "Path",
+  "old_ext": "Old Ext",
+  "new_ext": "New Ext",
+  "title_source": "Select folder",
+  "title_des": "Select destination folder, to empty override current folder"
 }

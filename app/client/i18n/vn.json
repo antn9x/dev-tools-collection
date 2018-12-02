@@ -4,5 +4,9 @@
   "jpg_quality": "Chất lượng JPG",
   "optimize": "Tối ưu",
   "name": "Tên",
-  "path": "Đường dẫn"
+  "path": "Đường dẫn",
+  "old_ext": "Phần mở rộng cũ",
+  "new_ext": "Phần mở rộng mới",
+  "title_source": "Chọn thư mục",
+  "title_des": "Chọn thư mục nhận, để trống tự động ghi đè thư mục hiện tại."
 }

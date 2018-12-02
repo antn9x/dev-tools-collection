@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
-import { Grid, Paper, Button } from '@material-ui/core/';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import { translate } from 'react-i18next';
 
 import sass from './RenameTab.scss';
 
-import { setLastSourceRenameFolder, getLastSourceRenameFolder } from '../storage/RenameTabData';
+import { setLastSourceRenameFolder, getLastSourceRenameFolder, setLastRenameFiles, getLastRenameFiles, setLastDesitnationRenameFolder, getLastDesitnationRenameFolder } from '../storage/RenameTabData';
 
-import { GET_FOLDER_FILES, MODIFY_EXT } from '../../constant.message';
+import { sendGetFolderFilesRequest, sendModifyFileExtension } from '../network/api';
 
 import FileChooser from '../components/FileChooser';
-import AllFile from '../components/AllFiles';
+import AllFiles from '../components/AllFiles';
 import FileRenameFunc from '../components/FileRenameFunc';
 
 const styles = theme => ({
@@ -29,22 +31,33 @@ class RenameTab extends React.Component {
     super(props);
     this.state = {
       src: getLastSourceRenameFolder(),
-      files: [],
+      des: getLastDesitnationRenameFolder(),
+      files: getLastRenameFiles(),
       oldExt: '',
       newExt: ''
     };
   }
 
-  handleGetFolderPath = (src) => {
-    ipcRenderer.send(GET_FOLDER_FILES, { src });
-    ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-      setLastSourceRenameFolder(src);
-
-      this.setState({
-        files: response,
-        src
-      });
+  handleGetDestinationFolder = (des) => {
+    this.setState({
+      des
     });
+
+    console.log(this.state.des);
+
+    setLastDesitnationRenameFolder(des);
+  }
+
+  handleGetSourceFolder = async (src) => {
+    const response = await sendGetFolderFilesRequest(src);
+    
+    this.setState({
+      files: response,
+      src
+    });
+
+    setLastSourceRenameFolder(src);
+    setLastRenameFiles(this.state.files);
   }
 
   handleOldExt = (oldExt) => {
@@ -60,7 +73,7 @@ class RenameTab extends React.Component {
   }
 
   handleModifyExt = () => {
-    const { src, oldExt, newExt } = this.state;
+    const { src, des, oldExt, newExt } = this.state;
 
     if (!oldExt || !newExt) {
       console.log('Not null');
@@ -70,27 +83,47 @@ class RenameTab extends React.Component {
     const newExtName = newExt.indexOf('.') !== -1 ? newExt : `.${newExt}`;
     const oldExtName = oldExt.indexOf('.') !== -1 ? oldExt : `.${oldExt}`;
 
-    ipcRenderer.send(MODIFY_EXT, { src, oldExtName, newExtName });
-    ipcRenderer.once(MODIFY_EXT, (sender, response) => {
+    sendModifyFileExtension(src, des, oldExtName, newExtName).then(response => {
       console.log(response);
-      this.handleGetFolderPath(src);
-    });
+      this.handleGetSourceFolder(src);
+      setLastRenameFiles(this.state.files);
+
+      return true;
+    }).catch();
   }
 
   render() {
-    const { files, src, oldExt, newExt } = this.state;
-    const { classes } = this.props;
+    const { files, src, des, oldExt, newExt } = this.state;
+    const { classes, t } = this.props;
 
     return (
       <Grid container spacing={8}>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Paper className={classes.paper}>
-            <FileChooser onChosenFolder={this.handleGetFolderPath} fileFolder={src} label="Source folder" />
-            <FileChooser onChosenFolder={this.handleGetFolderPath} fileFolder={src} label="Destination folder" />
+            <FileChooser
+              onChosenFolder={this.handleGetSourceFolder}
+              fileFolder={src}
+              label={t('source_folder')}
+              title={t('title_source')}
+            />
+            <FileChooser
+              onChosenFolder={this.handleGetDestinationFolder}
+              fileFolder={des}
+              label={t('destination_folder')}
+              title={t('title_des')}
+            />
 
             <form className={sass['modify-ext']}>
-              <FileRenameFunc defaultExt={oldExt} ext={this.handleOldExt} label="Old Ext" />
-              <FileRenameFunc defaultExt={newExt} ext={this.handleNewExt} label="New Ext" />
+              <FileRenameFunc
+                defaultExt={oldExt}
+                ext={this.handleOldExt}
+                label={t('old_ext')}
+              />
+              <FileRenameFunc
+                defaultExt={newExt}
+                ext={this.handleNewExt}
+                label={t('new_ext')}
+              />
               <Button
                 className={sass['modify-btn']}
                 variant="contained"
@@ -101,9 +134,9 @@ class RenameTab extends React.Component {
             </form>
           </Paper>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           <Paper className={classes.paper}>
-            <AllFile
+            <AllFiles
               files={files}
               src={src}
             />
@@ -115,7 +148,8 @@ class RenameTab extends React.Component {
 }
 
 RenameTab.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(RenameTab);
+export default withStyles(styles)(translate('translations')(RenameTab));

@@ -4,14 +4,15 @@ import {
 import {
   OPTIMIZE,
   GET_FOLDER_FILES,
-  CHECK_FILE_EXIST
+  CHECK_FILE_EXIST,
+  MODIFY_EXT
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
   ipcRenderer.send(key, data);
   return new Promise(resolve => {
     ipcRenderer.once(key, (sender, response) => {
-      console.log(key, response);
+      // console.log(key, response);
       resolve(response);
     });
   });
@@ -44,3 +45,11 @@ export const sendGetFolderFilesRequest = (src, patternList) => sendRequest(GET_F
  * @param {String} folderPath 
  */
 export const sendCheckFolderExisted = (folderPath) => sendRequest(CHECK_FILE_EXIST, folderPath);
+
+/**
+ * Modify name file extension in folder selected
+ * @param {String} src source folder
+ * @param {String} oldExtName Old name file extension
+ * @param {String} newExtName New name file extension
+ */
+export const sendModifyFileExtension = (src, des, oldExtName, newExtName) => sendRequest(MODIFY_EXT, { src, des, oldExtName, newExtName });

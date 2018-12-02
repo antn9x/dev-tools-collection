@@ -26,10 +26,6 @@ class FileChooser extends React.Component {
     src: this.props.fileFolder
   }
 
-  componentWillMount() {
-    this.props.onChosenFolder(this.state.src);
-  }
-
   selectFileCallback = (fileNames) => {
     if (fileNames === undefined) {
       console.log("No file selected");
@@ -53,14 +49,13 @@ class FileChooser extends React.Component {
   }
 
   render() {
-
     return (
       <Grid style={{ display: "flex" }} >
         <TextField
           id="outlined-full-width"
           label={this.props.label}
           style={{ marginTop: 8 }}
-          placeholder="Select folder with button"
+          placeholder={this.props.title}
           fullWidth
           margin="normal"
           variant="outlined"
@@ -79,7 +74,8 @@ class FileChooser extends React.Component {
 FileChooser.propTypes = {
   onChosenFolder: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
-  fileFolder: PropTypes.string.isRequired
+  fileFolder: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FileChooser);

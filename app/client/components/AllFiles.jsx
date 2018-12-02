@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableRow, TableCell, Checkbox, TableHead, TableBody } from '@material-ui/core';
 
-class AllFile extends Component {
+class AllFiles extends Component {
   state = {
     selected: []
   }
@@ -63,9 +63,9 @@ class AllFile extends Component {
               />
             </TableCell>
 
-            <TableCell>File Path</TableCell>
+            <TableCell style={{ fontSize: 14 }}>File Path</TableCell>
 
-            <TableCell>File Name</TableCell>
+            <TableCell style={{ fontSize: 14 }}>File Name</TableCell>
           </TableRow>
         </TableHead>
 
@@ -82,11 +82,11 @@ class AllFile extends Component {
                   />
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ fontSize: 14 }}>
                   {`${src}${file.subPath}`}
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ fontSize: 14 }}>
                   {file.base}
                 </TableCell>
               </TableRow>
@@ -98,9 +98,9 @@ class AllFile extends Component {
   }
 }
 
-AllFile.propTypes = {
+AllFiles.propTypes = {
   files: PropTypes.array.isRequired,
   src: PropTypes.string.isRequired
 };
  
-export default AllFile;
+export default AllFiles;

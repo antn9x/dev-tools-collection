@@ -2,6 +2,26 @@ const APP_NAME = 'dev-tools-collection';
 const getKeyForGame = key => `${APP_NAME}_${key}`;
 
 /**
+ *
+ * @param {string} key
+ * @param {any} value
+ */
+const setLocalStorage = (key, value) => {
+  localStorage.setItem(getKeyForGame(key), value);
+};
+
+/**
+ *
+ * @param {string} key
+ * @param {any} defaultValue
+ */
+const getLocalStorage = (key, defaultValue) => {
+  const value = localStorage.getItem(getKeyForGame(key), defaultValue);
+
+  return value || defaultValue;
+};
+
+/**
  * Get a string to local storage
  * @param {string} key 
  * @param {string} defaultValue 
@@ -106,4 +126,16 @@ export const getBoolForKey = (key, defaultValue) => {
  */
 export const setBoolForKey = (key, value) => {
   setStringForKey(key, value);
+};
+
+/**
+ * 
+ * @param {string} key 
+ * @param {Array} defaultValue 
+ */
+export const getArrayForKey = (key, defaultValue) => getLocalStorage(key, defaultValue);
+
+export const setArrayForKey = (key, value) => {
+  const valueConvert = JSON.stringify(value);
+  setLocalStorage(key, valueConvert);
 };
