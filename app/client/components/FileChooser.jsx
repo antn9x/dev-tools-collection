@@ -46,6 +46,8 @@ class FileChooser extends React.Component {
 
   handleChangeSource = (event) => {
     this.setState({ src: event.target.value });
+
+    this.props.onChangeDes(event.target.value);
   }
 
   render() {
@@ -75,7 +77,7 @@ FileChooser.propTypes = {
   onChosenFolder: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   fileFolder: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(FileChooser);

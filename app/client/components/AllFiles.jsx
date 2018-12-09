@@ -21,10 +21,16 @@ class AllFiles extends Component {
     });
   }
 
-  handleSelect = (event, id) => {
+  handleSelect = (event, id, file) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
+    
+    if (selectedIndex === -1) {
+      this.props.filesSelectRename(file, true);
+    } else {
+      this.props.filesSelectRename(file, false);
+    }
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -78,7 +84,7 @@ class AllFiles extends Component {
                 <TableCell padding="checkbox">
                   <Checkbox
                     checked={isSelected}
-                    onClick={event => this.handleSelect(event, index)}
+                    onClick={event => this.handleSelect(event, index, file)}
                   />
                 </TableCell>
 
@@ -100,7 +106,8 @@ class AllFiles extends Component {
 
 AllFiles.propTypes = {
   files: PropTypes.array.isRequired,
-  src: PropTypes.string.isRequired
+  src: PropTypes.string.isRequired,
+  filesSelectRename: PropTypes.func.isRequired
 };
  
 export default AllFiles;

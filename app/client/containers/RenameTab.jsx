@@ -8,7 +8,7 @@ import { translate } from 'react-i18next';
 
 import sass from './RenameTab.scss';
 
-import { setLastSourceRenameFolder, getLastSourceRenameFolder, setLastRenameFiles, getLastRenameFiles, setLastDesitnationRenameFolder, getLastDesitnationRenameFolder } from '../storage/RenameTabData';
+import { setLastSourceRenameFolder, getLastSourceRenameFolder, setLastDesitnationRenameFolder, getLastDesitnationRenameFolder } from '../storage/RenameTabData';
 
 import { sendGetFolderFilesRequest, sendModifyFileExtension } from '../network/api';
 
@@ -32,10 +32,15 @@ class RenameTab extends React.Component {
     this.state = {
       src: getLastSourceRenameFolder(),
       des: getLastDesitnationRenameFolder(),
-      files: getLastRenameFiles(),
+      files: [],
+      filesSelectedRename: [],
       oldExt: '',
       newExt: ''
     };
+  }
+
+  componentDidMount() {
+    this.handleGetSourceFolder(this.state.src);
   }
 
   handleGetDestinationFolder = (des) => {
@@ -43,21 +48,18 @@ class RenameTab extends React.Component {
       des
     });
 
-    console.log(this.state.des);
-
     setLastDesitnationRenameFolder(des);
   }
 
   handleGetSourceFolder = async (src) => {
     const response = await sendGetFolderFilesRequest(src);
-    
+
     this.setState({
       files: response,
       src
     });
 
     setLastSourceRenameFolder(src);
-    setLastRenameFiles(this.state.files);
   }
 
   handleOldExt = (oldExt) => {
@@ -84,12 +86,31 @@ class RenameTab extends React.Component {
     const oldExtName = oldExt.indexOf('.') !== -1 ? oldExt : `.${oldExt}`;
 
     sendModifyFileExtension(src, des, oldExtName, newExtName).then(response => {
-      console.log(response);
       this.handleGetSourceFolder(src);
-      setLastRenameFiles(this.state.files);
 
-      return true;
+      return response;
     }).catch();
+  }
+
+  handleChangeDes = (des) => {
+    this.setState({
+      des
+    }, () => {
+      setLastDesitnationRenameFolder(des);
+    });
+  }
+
+  handleFilesSelectRename = (file, isSelect) => {
+    if (isSelect) {
+      this.setState({
+        filesSelectedRename: [...this.state.filesSelectedRename, file]
+      });
+    } else {
+      const index = this.state.filesSelectedRename.indexOf(file);
+      this.setState({
+        filesSelectedRename: this.state.filesSelectedRename.filter((_, i) => i !== index)
+      });
+    }
   }
 
   render() {
@@ -109,6 +130,7 @@ class RenameTab extends React.Component {
             <FileChooser
               onChosenFolder={this.handleGetDestinationFolder}
               fileFolder={des}
+              onChangeDes={this.handleChangeDes}
               label={t('destination_folder')}
               title={t('title_des')}
             />
@@ -116,12 +138,12 @@ class RenameTab extends React.Component {
             <form className={sass['modify-ext']}>
               <FileRenameFunc
                 defaultExt={oldExt}
-                ext={this.handleOldExt}
+                name={this.handleOldExt}
                 label={t('old_ext')}
               />
               <FileRenameFunc
                 defaultExt={newExt}
-                ext={this.handleNewExt}
+                name={this.handleNewExt}
                 label={t('new_ext')}
               />
               <Button
@@ -139,6 +161,7 @@ class RenameTab extends React.Component {
             <AllFiles
               files={files}
               src={src}
+              filesSelectRename={this.handleFilesSelectRename}
             />
           </Paper>
         </Grid>

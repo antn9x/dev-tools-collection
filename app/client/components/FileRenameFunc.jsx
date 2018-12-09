@@ -6,7 +6,7 @@ class FileRenameFunc extends Component {
   state = {}
 
   handleChangeExt = (event) => {
-    this.props.ext(event.target.value);
+    this.props.name(event.target.value);
   }
 
   render() {
@@ -29,7 +29,7 @@ class FileRenameFunc extends Component {
 
 FileRenameFunc.propTypes = {
   label: PropTypes.string.isRequired,
-  ext: PropTypes.func.isRequired,
+  name: PropTypes.func.isRequired,
   defaultExt: PropTypes.string.isRequired
 };
  
