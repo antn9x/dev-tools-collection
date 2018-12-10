@@ -10,7 +10,7 @@ import sass from './RenameTab.scss';
 
 import { setLastSourceRenameFolder, getLastSourceRenameFolder, setLastDesitnationRenameFolder, getLastDesitnationRenameFolder } from '../storage/RenameTabData';
 
-import { sendGetFolderFilesRequest, sendModifyFileExtension } from '../network/api';
+import { sendGetFolderFilesRequest, sendModifyFileExtension, sendRename } from '../network/api';
 
 import FileChooser from '../components/FileChooser';
 import AllFiles from '../components/AllFiles';
@@ -35,7 +35,9 @@ class RenameTab extends React.Component {
       files: [],
       filesSelectedRename: [],
       oldExt: '',
-      newExt: ''
+      newExt: '',
+      oldName: '',
+      newName: ''
     };
   }
 
@@ -74,6 +76,18 @@ class RenameTab extends React.Component {
     });
   }
 
+  handleOldName = (oldName) => {
+    this.setState({
+      oldName
+    });
+  }
+
+  handleNewName = (newName) => {
+    this.setState({
+      newName
+    });
+  }
+
   handleModifyExt = () => {
     const { src, des, oldExt, newExt } = this.state;
 
@@ -86,6 +100,21 @@ class RenameTab extends React.Component {
     const oldExtName = oldExt.indexOf('.') !== -1 ? oldExt : `.${oldExt}`;
 
     sendModifyFileExtension(src, des, oldExtName, newExtName).then(response => {
+      this.handleGetSourceFolder(src);
+
+      return response;
+    }).catch();
+  }
+
+  handleRename = () => {
+    const { src, des, oldName, newName } = this.state;
+
+    if (!oldName || !newName) {
+      console.log('Not null');
+      return;
+    }
+
+    sendRename(src, des, oldName, newName).then(response => {
       this.handleGetSourceFolder(src);
 
       return response;
@@ -114,7 +143,7 @@ class RenameTab extends React.Component {
   }
 
   render() {
-    const { files, src, des, oldExt, newExt } = this.state;
+    const { files, src, des, oldExt, newExt, oldName, newName } = this.state;
     const { classes, t } = this.props;
 
     return (
@@ -152,6 +181,26 @@ class RenameTab extends React.Component {
                 color="primary"
                 onClick={this.handleModifyExt}
               >Modify
+              </Button>
+            </form>
+
+            <form className={sass['modify-ext']}>
+              <FileRenameFunc
+                defaultExt={oldName}
+                name={this.handleOldName}
+                label={t('old_name')}
+              />
+              <FileRenameFunc
+                defaultExt={newName}
+                name={this.handleNewName}
+                label={t('new_name')}
+              />
+              <Button
+                className={sass['modify-btn']}
+                variant="contained"
+                color="primary"
+                onClick={this.handleRename}
+              >Rename
               </Button>
             </form>
           </Paper>

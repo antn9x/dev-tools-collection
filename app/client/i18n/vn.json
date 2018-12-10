@@ -7,6 +7,8 @@
   "path": "Đường dẫn",
   "old_ext": "Phần mở rộng cũ",
   "new_ext": "Phần mở rộng mới",
+  "old_name": "Tên cũ",
+  "new_name": "Tên mới",
   "title_source": "Chọn thư mục",
   "title_des": "Chọn thư mục nhận, để trống tự động ghi đè thư mục hiện tại."
 }

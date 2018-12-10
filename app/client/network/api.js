@@ -5,7 +5,8 @@ import {
   OPTIMIZE,
   GET_FOLDER_FILES,
   CHECK_FILE_EXIST,
-  MODIFY_EXT
+  MODIFY_EXT,
+  RENAME
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
@@ -53,3 +54,5 @@ export const sendCheckFolderExisted = (folderPath) => sendRequest(CHECK_FILE_EXI
  * @param {String} newExtName New name file extension
  */
 export const sendModifyFileExtension = (src, des, oldExtName, newExtName) => sendRequest(MODIFY_EXT, { src, des, oldExtName, newExtName });
+
+export const sendRename = (src, des, oldName, newName) => sendRequest(RENAME, { src, des, oldName, newName });
