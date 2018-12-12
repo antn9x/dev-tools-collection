@@ -55,4 +55,4 @@ export const sendCheckFolderExisted = (folderPath) => sendRequest(CHECK_FILE_EXI
  */
 export const sendModifyFileExtension = (src, des, oldExtName, newExtName) => sendRequest(MODIFY_EXT, { src, des, oldExtName, newExtName });
 
-export const sendRename = (src, des, oldName, newName) => sendRequest(RENAME, { src, des, oldName, newName });
+export const sendRename = (filesSelectedRename, src, des, oldName, newName) => sendRequest(RENAME, { filesSelectedRename, src, des, oldName, newName });

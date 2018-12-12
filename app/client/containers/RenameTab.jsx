@@ -107,15 +107,21 @@ class RenameTab extends React.Component {
   }
 
   handleRename = () => {
-    const { src, des, oldName, newName } = this.state;
+    const { filesSelectedRename, src, des, oldName, newName } = this.state;
 
     if (!oldName || !newName) {
       console.log('Not null');
       return;
     }
 
-    sendRename(src, des, oldName, newName).then(response => {
+    if (!filesSelectedRename.length) {
+      console.log('Please select file!');
+      return;
+    }
+
+    sendRename(filesSelectedRename, src, des, oldName, newName).then(response => {
       this.handleGetSourceFolder(src);
+      this.child.defaultSelect();
 
       return response;
     }).catch();
@@ -208,6 +214,7 @@ class RenameTab extends React.Component {
         <Grid item xs={8}>
           <Paper className={classes.paper}>
             <AllFiles
+              ref={instance => { this.child = instance; }}
               files={files}
               src={src}
               filesSelectRename={this.handleFilesSelectRename}

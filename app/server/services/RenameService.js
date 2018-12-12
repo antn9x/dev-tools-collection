@@ -19,24 +19,21 @@ const handleModifyExt = async (folderPath, oldExt, newExt) => {
   });
 };
 
-const handleRename = async (folderPath, oldName, newName) => {
-  const allFilesPath = await dir.promiseFiles(folderPath);
+const handleRename = (filesSelectedRename, folderPath, oldName, newName) => {
+  filesSelectedRename.forEach(file => {
+    const oldBasename = file.base;
 
-  allFilesPath.forEach(filePath => {
-    console.log(path.dirname(filePath));
-    const basename = path.basename(filePath);
+    const newBasename = oldBasename.replace(oldName, newName);
 
-    const newBasename = basename.replace(oldName, newName);
-
-    const oldNamePath = path.resolve(filePath);
-    const newNamePath = path.resolve(path.dirname(filePath), newBasename);
+    const oldNamePath = path.resolve(folderPath, oldBasename);
+    const newNamePath = path.resolve(folderPath, newBasename);
 
     fs.renameSync(oldNamePath, newNamePath);
   });
 };
 
 export const rename = (data) => {
-  const { src, des, oldName, newName } = data;
+  const { filesSelectedRename, src, des, oldName, newName } = data;
 
   if (des) {
     ncp(src, des, (err) => {
@@ -46,14 +43,12 @@ export const rename = (data) => {
 
       console.log('done');
 
-      handleRename(des, oldName, newName);
+      handleRename(filesSelectedRename, des, oldName, newName);
     });
-
     return Promise.resolve();
   }
 
-  handleRename(src, oldName, newName);
-
+  handleRename(filesSelectedRename, src, oldName, newName);
   return Promise.resolve();
 };
 

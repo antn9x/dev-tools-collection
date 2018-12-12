@@ -7,6 +7,12 @@ class AllFiles extends Component {
     selected: []
   }
 
+  defaultSelect = () => {
+    this.setState({
+      selected: []
+    });
+  }
+
   handleSelectAllClick = event => {
     if (event.target.checked) {
       this.setState({
