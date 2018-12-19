@@ -1,4 +1,7 @@
 {
+  "default_encrypt_key": "Very secret key here.",
+  "encrypt_data": "Encrypt Data",
+  "encrypt_key": "Encrypt key",
   "source_folder": "Source Folder",
   "destination_folder": "Destination Folder",
   "jpg_quality": "JPG Quality",

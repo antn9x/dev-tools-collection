@@ -10,7 +10,7 @@ import Logger from "../utils/Logger";
  * @param {number} width 
  * @param {number} height 
  */
-export const createThumnail = (imageData) => {
+export const createThumbnail = (imageData) => {
   const {
     source,
     destination,
@@ -61,5 +61,5 @@ export const resizeAllImages = (imageListData) => {
     height
   } = imageListData;
 
-  return Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(createThumnail));
+  return Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(createThumbnail));
 };
