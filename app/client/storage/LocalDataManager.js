@@ -21,7 +21,7 @@ export const setStringForKey = (key, value) => {
 };
 
 /**
- * Get an interger number from local storage
+ * Get an integer number from local storage
  * @param {string} key 
  * @param {number} defaultValue 
  */
@@ -34,7 +34,7 @@ export const getIntForKey = (key, defaultValue) => {
 };
 
 /**
- * Save an interger number from local storage
+ * Save an integer number from local storage
  * @param {string} key 
  * @param {number} value 
  */

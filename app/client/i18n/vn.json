@@ -1,8 +1,17 @@
 {
+  "default_encrypt_key": "Khoá mã hoá bí mật điền tại đây",
+  "encrypt_data": "Mã hoá dữ liệu",
+  "encrypt_key": "Khoá mã hoá",
   "source_folder": "Thư mục nguồn",
   "destination_folder": "Thư mục đích",
   "jpg_quality": "Chất lượng JPG",
   "optimize": "Tối ưu",
   "name": "Tên",
-  "path": "Đường dẫn"
+  "path": "Đường dẫn",
+  "old_ext": "Phần mở rộng cũ",
+  "new_ext": "Phần mở rộng mới",
+  "old_name": "Tên cũ",
+  "new_name": "Tên mới",
+  "title_source": "Chọn thư mục",
+  "title_des": "Chọn thư mục nhận, để trống tự động ghi đè thư mục hiện tại."
 }

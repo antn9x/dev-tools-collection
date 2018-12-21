@@ -5,9 +5,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import { translate } from 'react-i18next';
+
 import RenameTab from './containers/RenameTab';
 import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
+import EncryptDataTab from './containers/EncryptDataTab';
 
 function TabContainer(props) {
   return (
@@ -25,35 +28,37 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    minWidth:1000
+    minWidth: 1000
   },
 });
 
 class App extends React.Component {
   state = {
-    value: 0,
+    tab: 0,
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
+  handleChange = (event, tab) => {
+    this.setState({ tab });
   };
 
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+    const { classes, t } = this.props;
+    const { tab } = this.state;
 
     return (
       <div className={classes.root}>
         <AppBar position="sticky">
-          <Tabs value={value} onChange={this.handleChange}>
+          <Tabs value={tab} onChange={this.handleChange}>
             <Tab label="Rename" />
             <Tab label="Resize Image" />
             <Tab label="Optimize Image" />
+            <Tab label={t('encrypt_data')} />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer><RenameTab /></TabContainer>}
-        {value === 1 && <TabContainer><ResizeTab /></TabContainer>}
-        {value === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
+        {tab === 0 && <TabContainer><RenameTab /></TabContainer>}
+        {tab === 1 && <TabContainer><ResizeTab /></TabContainer>}
+        {tab === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
+        {tab === 3 && <TabContainer><EncryptDataTab /></TabContainer>}
       </div>
     );
   }
@@ -61,6 +66,7 @@ class App extends React.Component {
 
 App.propTypes = {
   classes: PropTypes.object.isRequired,
+  t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(translate('translations')(App));

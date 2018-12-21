@@ -2,9 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, TableRow, TableCell, Checkbox, TableHead, TableBody } from '@material-ui/core';
 
-class AllFile extends Component {
+class AllFiles extends Component {
   state = {
     selected: []
+  }
+
+  defaultSelect = () => {
+    this.setState({
+      selected: []
+    });
   }
 
   handleSelectAllClick = event => {
@@ -21,10 +27,16 @@ class AllFile extends Component {
     });
   }
 
-  handleSelect = (event, id) => {
+  handleSelect = (event, id, file) => {
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
+    
+    if (selectedIndex === -1) {
+      this.props.filesSelectRename(file, true);
+    } else {
+      this.props.filesSelectRename(file, false);
+    }
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -63,9 +75,9 @@ class AllFile extends Component {
               />
             </TableCell>
 
-            <TableCell>File Path</TableCell>
+            <TableCell style={{ fontSize: 14 }}>File Path</TableCell>
 
-            <TableCell>File Name</TableCell>
+            <TableCell style={{ fontSize: 14 }}>File Name</TableCell>
           </TableRow>
         </TableHead>
 
@@ -78,15 +90,15 @@ class AllFile extends Component {
                 <TableCell padding="checkbox">
                   <Checkbox
                     checked={isSelected}
-                    onClick={event => this.handleSelect(event, index)}
+                    onClick={event => this.handleSelect(event, index, file)}
                   />
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ fontSize: 14 }}>
                   {`${src}${file.subPath}`}
                 </TableCell>
 
-                <TableCell>
+                <TableCell style={{ fontSize: 14 }}>
                   {file.base}
                 </TableCell>
               </TableRow>
@@ -98,9 +110,10 @@ class AllFile extends Component {
   }
 }
 
-AllFile.propTypes = {
+AllFiles.propTypes = {
   files: PropTypes.array.isRequired,
-  src: PropTypes.string.isRequired
+  src: PropTypes.string.isRequired,
+  filesSelectRename: PropTypes.func.isRequired
 };
  
-export default AllFile;
+export default AllFiles;

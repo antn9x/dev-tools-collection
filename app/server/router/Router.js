@@ -4,16 +4,18 @@ import {
   MODIFY_EXT,
   OPTIMIZE,
   RE_SIZE,
-  CHECK_FILE_EXIST
+  CHECK_FILE_EXIST,
+  RENAME,
+  ENCRYPT_DATA
 } from '../../constant.message';
-// import onRename from '../services/RenameService';
-import { modifyExt } from '../services/RenameService';
+import { modifyExt, rename } from '../services/RenameService';
 import {
   getFilesInFolder,
-  checkFileExist
+  checkFileExist,
 } from '../services/FilesService';
 import OptimizeAllImages from '../services/OptimizeImageService';
 import { resizeAllImages } from '../services/ResizeImagesService';
+import { encryptListFiles } from '../services/EncryptService';
 // import Logger from '../utils/Logger';
 
 const addListener = (name, listener) => {
@@ -29,5 +31,6 @@ export default function Router() {
   addListener(OPTIMIZE, OptimizeAllImages);
   addListener(RE_SIZE, resizeAllImages);
   addListener(MODIFY_EXT, modifyExt);
-//   addListener(RENAME, onRename);
+  addListener(RENAME, rename);
+  addListener(ENCRYPT_DATA, encryptListFiles);
 }
