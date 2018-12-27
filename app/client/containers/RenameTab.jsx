@@ -163,9 +163,8 @@ class RenameTab extends React.Component {
               title={t('title_source')}
             />
             <FileChooser
-              onChosenFolder={this.handleGetDestinationFolder}
+              onChosenFolder={this.handleChangeDes}
               fileFolder={des}
-              onChangeDes={this.handleChangeDes}
               label={t('destination_folder')}
               title={t('title_des')}
             />

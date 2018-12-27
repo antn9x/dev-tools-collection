@@ -34,7 +34,7 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
-    tab: 0,
+    tab: 2,
   };
 
   handleChange = (event, tab) => {

@@ -1,4 +1,9 @@
 {
+  "optimze_success": "Optimize successful!",
+  "import_source": "Please choose source folder!",
+  "ok": "OK",
+  "notification": "Notification!",
+  "warning": "Warning!",
   "default_encrypt_key": "Very secret key here.",
   "encrypt_data": "Encrypt Data",
   "encrypt_key": "Encrypt key",

@@ -10,6 +10,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { translate } from 'react-i18next';
 
 import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality, setLastDestinationOptimizeFolder } from '../storage/OptimizeImageTabData';
@@ -38,6 +43,9 @@ class OptimizeImageTab extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            open: false,
+            title: '',
+            description: '',
             src: getLastSourceOptimizeFolder(),
             des: getLastDestinationOptimizeFolder(),
             quality: getLastOptimizeJPGQuality(),
@@ -45,13 +53,15 @@ class OptimizeImageTab extends React.Component {
         };
     }
 
-    onClickOptimize = () => {
+    onClickOptimize = async () => {
         const { src, des, quality } = this.state;
         if (!src) {
             console.log('Import src pls!');
+            this.setState({ open: true, description: this.props.t('import_source'), title: this.props.t('warning') });
             return;
         }
-        sendOptimizeRequest(src, des, quality);
+        await sendOptimizeRequest(src, des, quality);
+        this.setState({ open: true, description: this.props.t('optimze_success'), title: this.props.t('notification') });
     }
 
     onClickSource = async (src) => {
@@ -83,9 +93,17 @@ class OptimizeImageTab extends React.Component {
         this.setState({ des: event.target.value });
     }
 
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    }
+
     render() {
         const { classes, t } = this.props;
-        const { files, src, des } = this.state;
+        const { files, src, des, quality, open, title, description } = this.state;
         return (
           <Grid container spacing={8}>
             <Grid item xs={3}>
@@ -107,7 +125,7 @@ class OptimizeImageTab extends React.Component {
                   className={classes.textField}
                   margin="normal"
                   variant="outlined"
-                  value={this.state.quality}
+                  value={quality}
                   onChange={this.handleChangeJPGQuality}
                 />
                 <Button
@@ -116,8 +134,24 @@ class OptimizeImageTab extends React.Component {
                   className={classes.button}
                   onClick={this.onClickOptimize}
                 >
-                  { t('optimize')}
+                  {t('optimize')}
                 </Button>
+                <Dialog
+                  open={open}
+                  onClose={this.handleClose}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-description">{description}
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleClose} color="primary" autoFocus>{t('ok')}
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Paper>
             </Grid>
             <Grid item xs={9}>
@@ -125,15 +159,15 @@ class OptimizeImageTab extends React.Component {
                 <Table>
                   <TableHead >
                     <TableRow>
-                      <TableCell className={classes.header}>{ t('path')}</TableCell>
-                      <TableCell className={classes.header}>{ t('name')}</TableCell>
+                      <TableCell className={classes.header}>{t('path')}</TableCell>
+                      <TableCell className={classes.header}>{t('name')}</TableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
                     {files.map((file, index) => (
                       <FileOptimizeRow
-                        key={`OptimizeImageTab${index}`} // eslint-disable-line
+                                        key={`OptimizeImageTab${index}`} // eslint-disable-line
                         fileName={file.base}
                         filePath={src + file.subPath}
                       />))}

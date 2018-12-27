@@ -13,7 +13,7 @@ i18n
         translations: vnVi
       }
     },
-    fallbackLng: 'vn',
+    fallbackLng: 'en',
     debug: true,
 
     // have a common namespace used around the full app
