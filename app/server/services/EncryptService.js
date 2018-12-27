@@ -20,7 +20,7 @@ export const encrypt = (imageData) => {
 		key = 'encryptDecryptBinaryXOR',
 		name
 	} = imageData;
-	const fileName = path.resolve(source, name);
+	const fileName = path.join(source, name);
 	const newPath = destination ? path.join(destination, name) : fileName;
 	const fileContent = fs.readFileSync(fileName);
 	// console.log("Encrypt Open file :" + fileContent);

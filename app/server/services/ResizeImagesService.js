@@ -18,13 +18,12 @@ export const createThumbnail = (imageData) => {
     width,
     height
   } = imageData;
-  const fileName = path.resolve(source, name);
+  const fileName = path.join(source, name);
   const newPath = destination ? path.join(destination, name) : fileName;
-  Logger.log(`Filename: ${  fileName}`);
+  // Logger.log(`Filename: ${fileName}`, imageData);
   return new Promise((resolve, reject) => {
     sharp(fileName)
-      .resize(width, height)
-      .max()
+      .resize(width, height, { fit: "inside" })
       .toFile(newPath, (err) => {
         if (err) {
           Logger.error(err);

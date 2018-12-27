@@ -7,7 +7,8 @@ import {
   CHECK_FILE_EXIST,
   MODIFY_EXT,
   RENAME,
-  ENCRYPT_DATA
+  ENCRYPT_DATA,
+  RE_SIZE
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
@@ -66,3 +67,14 @@ export const sendRename = (filesSelectedRename, src, des, oldName, newName) => s
  * @param {string} key secret key
  */
 export const sendEncryptRequest = (names, src, des, key) => sendRequest(ENCRYPT_DATA, { names, src, des, key });
+
+/**
+ * send resize image request to server
+ * @param {Array} names list files name
+ * @param {string} src source folder
+ * @param {string} des destination folder
+ * @param {Number} width destination width
+ * @param {Number} height destination height
+ */
+export const sendResizeRequest = (src, des, names, width, height) =>
+  sendRequest(RE_SIZE, { src, des, names, width, height });
