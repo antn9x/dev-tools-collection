@@ -17,7 +17,9 @@ import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
 import DialogAlert from '../components/DialogAlert';
 import { sendResizeRequest, sendGetFolderFilesRequest } from '../network/api';
-import { getLastResizeFolder, getLastResizeWidth, getLastResizeHeight, setLastResizeFolder, setLastResizeDestinationFolder, setLastResizeWidth, setLastResizeHeight } from '../storage/ResizeTabData';
+import { getLastResizeFolder, getLastResizeWidth, getLastResizeHeight, setLastResizeFolder,
+    setLastResizeDestinationFolder, setLastResizeWidth, setLastResizeHeight, getLastResizeDestinationFolder
+} from '../storage/ResizeTabData';
 
 const styles = theme => ({
     root: {
@@ -34,11 +36,16 @@ class ResizeTab extends React.Component {
 
     constructor(props) {
         super(props);
+        const fileOpen = getLastResizeFolder();
+        if(fileOpen){
+            this.onChosenSource(fileOpen);
+        }
+
         this.state = {
             selected: [],
             files: [],
-            fileOpen: getLastResizeFolder(),
-            fileSave: '',
+            fileOpen,
+            fileSave: getLastResizeDestinationFolder(),
             width: getLastResizeWidth(),
             height: getLastResizeHeight()
         };
@@ -49,11 +56,6 @@ class ResizeTab extends React.Component {
         const { fileOpen, fileSave, selected, width, height } = this.state;
         if (!fileSave) {
             this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('import_source'));
-            return;
-        }
-
-        if (!fileSave) {
-            this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('import_destination'));
             return;
         }
 
@@ -199,16 +201,16 @@ class ResizeTab extends React.Component {
 
                   <TableBody>
                     {
-                                    files.map((file, index) => (
-                                      <FileDisplay
-                                            key={index}// eslint-disable-line
-                                        file={file}
-                                        height={height}
-                                        width={width}
-                                        clickCheckbox={this.handleClick}
-                                      />
-                                    ))
-                                }
+                        files.map((file, index) => (
+                          <FileDisplay
+                            key={index} // eslint-disable-line
+                            file={file}
+                            height={height}
+                            width={width}
+                            clickCheckbox={this.handleClick}
+                          />
+                        ))
+                    }
                   </TableBody>
                 </Table>
               </Paper>

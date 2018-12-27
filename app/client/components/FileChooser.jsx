@@ -3,7 +3,7 @@ import { remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import FolderIcon from '@material-ui/icons/Folder';
 import PropTypes from 'prop-types';
 
 
@@ -68,7 +68,7 @@ class FileChooser extends React.Component {
           value={this.state.src}
           onChange={this.handleChangeSource}
         />
-        <FolderSharedIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
+        <FolderIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
       </Grid>
     );
   }
