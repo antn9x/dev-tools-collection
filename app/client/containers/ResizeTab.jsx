@@ -115,7 +115,6 @@ class ResizeTab extends React.Component {
 
     onChosenSource = async (src) => {
         const selected = await sendGetFolderFilesRequest(src, ['jpg$', 'png$', 'jpeg$']);
-        console.log(selected);
 
         const listData = selected.map(item => ({
             check: true,
@@ -179,7 +178,7 @@ class ResizeTab extends React.Component {
                 >
                   {t('re_size')}
                 </Button>
-                <DialogAlert ref={this.dialogAlert} buttonLabel={t('ok')} />
+                <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
             <Grid item xs={9}>

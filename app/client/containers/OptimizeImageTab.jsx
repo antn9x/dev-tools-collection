@@ -122,7 +122,7 @@ class OptimizeImageTab extends Component {
                 >
                   {t('optimize')}
                 </Button>
-                <DialogAlert ref={this.dialogAlert} buttonLabel={t('ok')} />
+                <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
             <Grid item xs={9}>

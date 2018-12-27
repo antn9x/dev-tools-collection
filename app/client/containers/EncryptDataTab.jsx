@@ -129,7 +129,7 @@ class EncryptDataTab extends React.Component {
                 >
                   {t('encrypt_data')}
                 </Button>
-                <DialogAlert ref={this.dialogAlert} buttonLabel={t('ok')} />
+                <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
             <Grid item xs={9}>
