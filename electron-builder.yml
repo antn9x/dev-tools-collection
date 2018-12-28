@@ -1,4 +1,4 @@
-productName: OptimizeImageTool
+productName: DevToolsCollection
 appId: org.develar.DevToolsCollection
 files:
   - dist/

@@ -8,14 +8,15 @@ import {
   MODIFY_EXT,
   RENAME,
   ENCRYPT_DATA,
-  RE_SIZE
+  RE_SIZE,
+  LOG_DATA
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
   ipcRenderer.send(key, data);
+  // console.log(key, data);
   return new Promise(resolve => {
     ipcRenderer.once(key, (sender, response) => {
-      // console.log(key, response);
       resolve(response);
     });
   });
@@ -78,3 +79,9 @@ export const sendEncryptRequest = (names, src, des, key) => sendRequest(ENCRYPT_
  */
 export const sendResizeRequest = (src, des, names, width, height) =>
   sendRequest(RE_SIZE, { src, des, names, width, height });
+
+/**
+ * send data to server then log it to file
+ * @param {String} message 
+ */
+export const sendLogRequest = (message) => sendRequest(LOG_DATA, message);

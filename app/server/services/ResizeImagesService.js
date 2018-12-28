@@ -1,6 +1,7 @@
 import path from 'path';
 import sharp from 'sharp';
-import Logger from "../utils/Logger";
+// import Logger from "../utils/Logger";
+import DailyLog from "../utils/DailyLog";
 
 /**
  * Create one image resized
@@ -26,7 +27,6 @@ export const createThumbnail = (imageData) => {
       .resize(width, height, { fit: "inside" })
       .toFile(newPath, (err) => {
         if (err) {
-          Logger.error(err);
           reject(err);
         }
         resolve();
@@ -51,7 +51,7 @@ const genDataImagesList = (source, destination, name, width, height) => ({
  * Optimize a list of images
  * @param {Object} imageListData 
  */
-export const resizeAllImages = (imageListData) => {
+export const resizeAllImages = async (imageListData) => {
   const {
     src,
     des,
@@ -59,6 +59,10 @@ export const resizeAllImages = (imageListData) => {
     width,
     height
   } = imageListData;
-
-  return Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(createThumbnail));
+  try {
+    await Promise.all(names.map(name => genDataImagesList(src, des, name, width, height)).map(createThumbnail));
+  } catch (error) {
+    DailyLog.error(error);
+    return error.message;
+  }
 };

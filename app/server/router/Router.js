@@ -6,7 +6,8 @@ import {
   RE_SIZE,
   CHECK_FILE_EXIST,
   RENAME,
-  ENCRYPT_DATA
+  ENCRYPT_DATA,
+  LOG_DATA
 } from '../../constant.message';
 import { modifyExt, rename } from '../services/RenameService';
 import {
@@ -14,6 +15,7 @@ import {
   checkFileExist,
 } from '../services/FilesService';
 import OptimizeAllImages from '../services/OptimizeImageService';
+import logData from '../services/LogService';
 import { resizeAllImages } from '../services/ResizeImagesService';
 import { encryptListFiles } from '../services/EncryptService';
 // import Logger from '../utils/Logger';
@@ -33,4 +35,5 @@ export default function Router() {
   addListener(MODIFY_EXT, modifyExt);
   addListener(RENAME, rename);
   addListener(ENCRYPT_DATA, encryptListFiles);
+  addListener(LOG_DATA, logData);
 }
