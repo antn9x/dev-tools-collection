@@ -44,8 +44,8 @@ class FileDisplay extends Component {
 FileDisplay.propTypes = {
     clickCheckbox: PropTypes.func.isRequired,
     file: PropTypes.object.isRequired,
-    width: PropTypes.string.isRequired,
-    height: PropTypes.string.isRequired
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
 };
 
 export default FileDisplay;
