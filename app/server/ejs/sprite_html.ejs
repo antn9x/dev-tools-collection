@@ -1,0 +1,22 @@
+<html>
+<head>
+<style>
+<% sprites.forEach(function(sprite){ %>
+#<%= sprite.name %> {
+    background-image:url("<%= img.path %>");
+    background-position: -<%= sprite.x %> -<%= sprite.y %>;
+    width: <%= sprite.w %>;
+    height: <%= sprite.h %>;
+}
+<% }); %>
+
+</style>
+</head>
+<body>
+{% for sprite in sprites %}
+<span>{{sprite.name}}</span>
+<div id="{{sprite.name}}"></div>
+{% endfor %}
+
+</body>
+</html>

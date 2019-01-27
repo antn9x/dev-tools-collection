@@ -9,7 +9,8 @@ import {
   RENAME,
   ENCRYPT_DATA,
   RE_SIZE,
-  LOG_DATA
+  LOG_DATA,
+  CONVERT_SPRITE_SHEET_JSON2_XML
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
@@ -85,3 +86,5 @@ export const sendResizeRequest = (src, des, names, width, height) =>
  * @param {String} message 
  */
 export const sendLogRequest = (message) => sendRequest(LOG_DATA, message);
+
+export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, {type, src, des});

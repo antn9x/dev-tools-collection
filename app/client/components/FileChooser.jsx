@@ -39,8 +39,7 @@ class FileChooser extends React.Component {
 
   onClickSource = () => {
     dialog.showOpenDialog({
-      title: "Select the a folder.",
-      properties: ['openDirectory']
+      title: "Select the a file.",
     }, this.selectFileCallback);
   }
 

@@ -1,0 +1,5 @@
+<TextureAtlas imagePath="<%= sheet.name %>">
+<% sprites.forEach(function(sprite){ %>
+		<SubTexture name="<%= sprite.name %>" x="<%= sprite.x %>" y="<%= sprite.y %>" width="<%= sprite.width %>" height="<%= sprite.height %>" />
+<% }); %>
+</TextureAtlas>

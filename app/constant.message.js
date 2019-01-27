@@ -6,3 +6,4 @@ export const OPTIMIZE = 'OPTIMIZE';
 export const MODIFY_EXT = 'modify-ext';
 export const ENCRYPT_DATA = 'ENCRYPT_DATA';
 export const LOG_DATA = 'LOG_DATA';
+export const CONVERT_SPRITE_SHEET_JSON2_XML = 'CONVERT_SPRITE_SHEET_JSON2_XML';
