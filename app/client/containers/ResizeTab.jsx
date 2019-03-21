@@ -138,11 +138,13 @@ class ResizeTab extends React.Component {
         <Grid item xs={3}>
           <Paper className={classes.paper}>
             <FileChooser
+              isFolder
               label="Source folder"
               onChosenFolder={this.onChosenSource}
               fileFolder={fileOpen}
             />
             <FileChooser
+              isFolder
               label="Destination folder"
               onChosenFolder={this.receiveFileSave}
               fileFolder={fileSave}

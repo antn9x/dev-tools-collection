@@ -38,9 +38,14 @@ class FileChooser extends React.Component {
   }
 
   onClickSource = () => {
-    dialog.showOpenDialog({
-      title: "Select the a file.",
-    }, this.selectFileCallback);
+    const option = this.props.isFolder ?
+      {
+        title: "Select the a folder.",
+        properties: ['openDirectory']
+      } : {
+        title: "Select the a file.",
+      };
+    dialog.showOpenDialog(option, this.selectFileCallback);
   }
 
   handleChangeSource = (event) => {
@@ -78,10 +83,12 @@ FileChooser.propTypes = {
   label: PropTypes.string.isRequired,
   fileFolder: PropTypes.string.isRequired,
   title: PropTypes.string,
+  isFolder: PropTypes.bool,
 };
 
 FileChooser.getDefaultProps = {
-  title: ''
+  title: '',
+  isFolder: false
 };
 
 export default withStyles(styles)(FileChooser);

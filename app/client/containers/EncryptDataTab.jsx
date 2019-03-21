@@ -102,11 +102,13 @@ class EncryptDataTab extends React.Component {
             <Grid item xs={3}>
               <Paper className={css.functions_wrapper}>
                 <FileChooser
+                  isFolder
                   fileFolder={src}
                   label={t('source_folder')}
                   onChosenFolder={this.onClickSource}
                 />
                 <FileChooser
+                  isFolder
                   fileFolder={des}
                   label={t('destination_folder')}
                   onChosenFolder={this.onClickDestination}
