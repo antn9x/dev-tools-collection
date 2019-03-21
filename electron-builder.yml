@@ -1,5 +1,5 @@
 productName: DevToolsCollection
-appId: org.develar.DevToolsCollection
+appId: org.antn9x.DevToolsCollection
 files:
   - dist/
   - node_modules/

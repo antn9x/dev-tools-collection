@@ -5,7 +5,7 @@ import ejs from 'ejs';
 import compact from 'lodash/compact';
 import Logger from '../utils/Logger';
 
-const handelFile = async (srcFolder, file, patternList = []) => {
+const handelFile = (srcFolder, file, patternList = []) => {
 
   if (!patternList.length || patternList.some(pat => file.match(new RegExp(pat, 'i')))) {
     return {
@@ -16,11 +16,8 @@ const handelFile = async (srcFolder, file, patternList = []) => {
   }
 };
 
-export const getFilesInFolder = ({
-  src,
-  patternList
-}) => dir.promiseFiles(src)
-  .then(files => Promise.all(files.map(file => handelFile(src, file, patternList))))
+export const getFilesInFolder = ({ src, patternList }) => dir.promiseFiles(src)
+  .then(files => files.map(file => handelFile(src, file, patternList)))
   .then(compact);
 
 export const checkFileExist = (filePath) => fs.existsSync(filePath);

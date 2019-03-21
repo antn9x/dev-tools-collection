@@ -11,13 +11,16 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import { translate } from 'react-i18next';
 
-import { getLastSourceConvertFolder, getLastDestinationConvertFolder, setLastSourceConvertFolder, setLastDestinationConvertFolder } from '../storage/ConvertSpriteSheetData';
+import {
+  getLastSourceConvertFolder, getLastDestinationConvertFolder,
+  setLastSourceConvertFolder, setLastDestinationConvertFolder,
+  getLastConvertType
+} from '../storage/ConvertSpriteSheetData';
 
 import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
 import { sendConvertRequest } from '../network/api';
 import DialogAlert from '../components/DialogAlert';
-import { getLastConvertType } from '../storage/ConvertSpriteSheetData';
 
 const styles = theme => ({
   root: {
@@ -124,8 +127,7 @@ class ConvertDataTab extends React.Component {
                 </TableRow>
               </TableHead>
 
-              <TableBody>
-              </TableBody>
+              <TableBody />
             </Table>
           </Paper>
         </Grid>
