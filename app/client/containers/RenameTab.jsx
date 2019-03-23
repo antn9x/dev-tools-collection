@@ -157,15 +157,16 @@ class RenameTab extends React.Component {
         <Grid item xs={4}>
           <Paper className={classes.paper}>
             <FileChooser
+              isFolder
               onChosenFolder={this.handleGetSourceFolder}
               fileFolder={src}
               label={t('source_folder')}
               title={t('title_source')}
             />
             <FileChooser
-              onChosenFolder={this.handleGetDestinationFolder}
+              isFolder
+              onChosenFolder={this.handleChangeDes}
               fileFolder={des}
-              onChangeDes={this.handleChangeDes}
               label={t('destination_folder')}
               title={t('title_des')}
             />

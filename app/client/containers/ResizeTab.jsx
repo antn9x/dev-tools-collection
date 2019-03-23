@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
-import { ipcRenderer } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -12,10 +11,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
+import { translate } from 'react-i18next';
+
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
-import { GET_FOLDER_FILES, RE_SIZE } from '../../constant.message';
-import { getLastSourceOptimizeFolder } from '../storage/OptimizeImageTabData';
+import DialogAlert from '../components/DialogAlert';
+import { sendResizeRequest, sendGetFolderFilesRequest, sendLogRequest } from '../network/api';
+import {
+  getLastResizeFolder, getLastResizeWidth, getLastResizeHeight, setLastResizeFolder,
+  setLastResizeDestinationFolder, setLastResizeWidth, setLastResizeHeight, getLastResizeDestinationFolder
+} from '../storage/ResizeTabData';
 
 const styles = theme => ({
   root: {
@@ -32,69 +37,69 @@ class ResizeTab extends React.Component {
 
   constructor(props) {
     super(props);
+    const fileOpen = getLastResizeFolder();
+    if (fileOpen) {
+      this.onChosenSource(fileOpen);
+    }
+
     this.state = {
-      // src: getLastSourceOptimizeFolder(),
       selected: [],
       files: [],
-      fileOpen: getLastSourceOptimizeFolder(),
-      fileSave: '',
-      width: 1000,
-      height: 1000
+      fileOpen,
+      fileSave: getLastResizeDestinationFolder(),
+      width: getLastResizeWidth(),
+      height: getLastResizeHeight()
     };
+    this.dialogAlert = createRef();
   }
 
-  onClickResize = () => {
-    const { fileOpen, fileSave, selected, width, height} = this.state;
-    if( fileSave === '') {
-      return alert("no path save file");
+  onClickResize = async () => {
+    const { fileOpen, fileSave, selected, width, height } = this.state;
+    if (!fileOpen) {
+      this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('import_source'));
+      return;
     }
 
-    if( selected.length === 0 ) {
-      return alert("no file Resize");
+    if (!selected.length) {
+      this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('no_file_selected'));
+      return;
     }
 
-    if(width === ''){
-      return alert("no set width for file resize");
+    if (!width) {
+      this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('enter_width'));
+      return;
     }
 
-    if(height === ''){
-      return alert('no set height for file resize');
+    if (!height) {
+      this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('enter_height'));
+      return;
     }
 
-    const resize = {
-      src: fileOpen,
-      des: fileSave,
-      names: selected.map(file=>`${file.subPath}/${file.base}`),
-      width,
-      height
-    };
-
-    console.log(resize);
-    ipcRenderer.send(RE_SIZE, resize);
-    ipcRenderer.once(RE_SIZE, (sender, response) => {
-      console.log(response);
-    });
+    const names = selected.map(file => `${file.subPath}/${file.base}`);
+    sendLogRequest(JSON.stringify({ fileOpen, fileSave, selected, width, height }));
+    await sendResizeRequest(fileOpen, fileSave, names, width, height);
+    this.dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('resize_success'));
+    setLastResizeFolder(fileOpen);
+    setLastResizeDestinationFolder(fileSave);
+    setLastResizeWidth(width);
+    setLastResizeHeight(height);
   }
 
-  handleChangeDestination = (event) => {
-    this.setState({
-      width: event.target.value
-    });
+  handleChangeWidth = (event) => {
+    const width = parseInt(event.target.value, 10);
+    this.setState({ width });
   }
 
-  handleChangeReplaceTo = (event) => {
-    this.setState({ height: event.target.value });
+  handleChangeHeight = (event) => {
+    const height = parseInt(event.target.value, 10);
+    this.setState({ height });
   }
 
   handleSelectAllClick = () => {
-    let listFileCheck = this.state.files.map( el => {
-      let obj = {};
-      obj = {
-        check: !el.check,
-        item: el.item
-      };
-      return obj;
-    });
+    const listFileCheck = this.state.files.map(el => ({
+      check: !el.check,
+      item: el.item
+    }));
 
     this.setState({
       files: listFileCheck
@@ -102,56 +107,44 @@ class ResizeTab extends React.Component {
   }
 
   handleClick = () => {
-    let dataSendServer = [];
-    this.state.files.filter(el => el.check === true).forEach( el => dataSendServer.push(el.item));
-    this.setState({ 
-      selected: dataSendServer
-    });
+    const selected = this.state.files.filter(el => el.check === true).map(el => el.item);
+    this.setState({ selected });
   };
 
-
   receiveFileSave = (fileSave) => {
-    this.setState({
-      fileSave
-    });
-    console.log(fileSave);
-
+    this.setState({ fileSave });
   }
 
-  onChosenSource = (src) => {
-    ipcRenderer.send(GET_FOLDER_FILES, { src });
-    ipcRenderer.once(GET_FOLDER_FILES, (sender, response) => {
-    let listData = [];
-    response.forEach(el => {
-      listData.push({
-        check: true,
-        item: el
-      });
-    });
+  onChosenSource = async (src) => {
+    const selected = await sendGetFolderFilesRequest(src, ['jpg$', 'png$', 'jpeg$']);
 
+    const listData = selected.map(item => ({
+      check: true,
+      item
+    }));
     this.setState({
       files: listData,
       fileOpen: src,
-      selected: response
-    });
-      
+      selected
     });
   }
 
   render() {
-    const { classes } = this.props;
-    const { files, selected, height, width, fileOpen,fileSave } = this.state;
+    const { classes, t } = this.props;
+    const { files, selected, height, width, fileOpen, fileSave } = this.state;
 
     return (
       <Grid container spacing={8}>
         <Grid item xs={3}>
           <Paper className={classes.paper}>
             <FileChooser
+              isFolder
               label="Source folder"
               onChosenFolder={this.onChosenSource}
               fileFolder={fileOpen}
             />
             <FileChooser
+              isFolder
               label="Destination folder"
               onChosenFolder={this.receiveFileSave}
               fileFolder={fileSave}
@@ -159,24 +152,24 @@ class ResizeTab extends React.Component {
             <Paper >
               <TextField
                 id="outlined-with-placeholder"
-                label="Width"
+                label={t("width")}
                 placeholder="100px"
                 type="number"
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={this.handleChangeDestination}
+                onChange={this.handleChangeWidth}
                 defaultValue={width}
               />
               <TextField
                 id="outlined-with-placeholder"
-                label="Height"
+                label={t("height")}
                 placeholder="100px"
                 type="number"
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
-                onChange={this.handleChangeReplaceTo}
+                onChange={this.handleChangeHeight}
                 defaultValue={height}
               />
             </Paper>
@@ -187,8 +180,9 @@ class ResizeTab extends React.Component {
               className={classes.button}
               onClick={this.onClickResize}
             >
-              RE SIZE
+              {t('re_size')}
             </Button>
+            <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
           </Paper>
         </Grid>
         <Grid item xs={9}>
@@ -203,8 +197,8 @@ class ResizeTab extends React.Component {
                       onClick={this.handleSelectAllClick}
                     />
                   </TableCell>
-                  <TableCell >Name</TableCell>
-                  <TableCell >Demension</TableCell>
+                  <TableCell >{t('name')}</TableCell>
+                  <TableCell >{t('demension')}</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -212,7 +206,7 @@ class ResizeTab extends React.Component {
                 {
                   files.map((file, index) => (
                     <FileDisplay
-                      key={index}
+                      key={index} // eslint-disable-line
                       file={file}
                       height={height}
                       width={width}
@@ -230,7 +224,8 @@ class ResizeTab extends React.Component {
 }
 
 ResizeTab.propTypes = {
+  t: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ResizeTab);
+export default withStyles(styles)(translate('translations')(ResizeTab));

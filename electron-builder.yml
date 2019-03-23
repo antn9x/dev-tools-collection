@@ -1,5 +1,5 @@
-productName: OptimizeImageTool
-appId: org.develar.DevToolsCollection
+productName: DevToolsCollection
+appId: org.antn9x.DevToolsCollection
 files:
   - dist/
   - node_modules/

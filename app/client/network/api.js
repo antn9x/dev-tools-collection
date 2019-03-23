@@ -7,14 +7,17 @@ import {
   CHECK_FILE_EXIST,
   MODIFY_EXT,
   RENAME,
-  ENCRYPT_DATA
+  ENCRYPT_DATA,
+  RE_SIZE,
+  LOG_DATA,
+  CONVERT_SPRITE_SHEET_JSON2_XML
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
   ipcRenderer.send(key, data);
+  // console.log(key, data);
   return new Promise(resolve => {
     ipcRenderer.once(key, (sender, response) => {
-      // console.log(key, response);
       resolve(response);
     });
   });
@@ -66,3 +69,22 @@ export const sendRename = (filesSelectedRename, src, des, oldName, newName) => s
  * @param {string} key secret key
  */
 export const sendEncryptRequest = (names, src, des, key) => sendRequest(ENCRYPT_DATA, { names, src, des, key });
+
+/**
+ * send resize image request to server
+ * @param {Array} names list files name
+ * @param {string} src source folder
+ * @param {string} des destination folder
+ * @param {Number} width destination width
+ * @param {Number} height destination height
+ */
+export const sendResizeRequest = (src, des, names, width, height) =>
+  sendRequest(RE_SIZE, { src, des, names, width, height });
+
+/**
+ * send data to server then log it to file
+ * @param {String} message 
+ */
+export const sendLogRequest = (message) => sendRequest(LOG_DATA, message);
+
+export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, {type, src, des});

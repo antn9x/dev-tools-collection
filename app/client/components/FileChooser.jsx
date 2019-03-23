@@ -3,7 +3,7 @@ import { remote } from 'electron';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import FolderIcon from '@material-ui/icons/Folder';
 import PropTypes from 'prop-types';
 
 
@@ -38,16 +38,21 @@ class FileChooser extends React.Component {
   }
 
   onClickSource = () => {
-    dialog.showOpenDialog({
-      title: "Select the a folder.",
-      properties: ['openDirectory']
-    }, this.selectFileCallback);
+    const option = this.props.isFolder ?
+      {
+        title: "Select the a folder.",
+        properties: ['openDirectory']
+      } : {
+        title: "Select the a file.",
+      };
+    dialog.showOpenDialog(option, this.selectFileCallback);
   }
 
   handleChangeSource = (event) => {
-    this.setState({ src: event.target.value });
-
-    this.props.onChangeDes(event.target.value);
+    const src = event.target.value;
+    this.setState({ src }, () => {
+      this.props.onChosenFolder(src);
+    });
   }
 
   render() {
@@ -67,7 +72,7 @@ class FileChooser extends React.Component {
           value={this.state.src}
           onChange={this.handleChangeSource}
         />
-        <FolderSharedIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
+        <FolderIcon color="primary" style={{ width: 80, height: 40, marginTop: 10 }} onClick={this.onClickSource} />
       </Grid>
     );
   }
@@ -77,7 +82,13 @@ FileChooser.propTypes = {
   onChosenFolder: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   fileFolder: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  isFolder: PropTypes.bool,
+};
+
+FileChooser.getDefaultProps = {
+  title: '',
+  isFolder: false
 };
 
 export default withStyles(styles)(FileChooser);

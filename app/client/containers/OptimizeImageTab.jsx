@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -18,6 +18,7 @@ import FileOptimizeRow from '../components/FileOptimizeRow';
 import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
 import { sendGetFolderFilesRequest, sendOptimizeRequest } from '../network/api';
+import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({
     root: {
@@ -33,7 +34,7 @@ const styles = theme => ({
     }
 });
 
-class OptimizeImageTab extends React.Component {
+class OptimizeImageTab extends Component {
 
     constructor(props) {
         super(props);
@@ -43,15 +44,18 @@ class OptimizeImageTab extends React.Component {
             quality: getLastOptimizeJPGQuality(),
             files: []
         };
+        this.dialogAlert = createRef();
     }
 
-    onClickOptimize = () => {
+    onClickOptimize = async () => {
         const { src, des, quality } = this.state;
         if (!src) {
             console.log('Import src pls!');
+            this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('import_source'));
             return;
         }
-        sendOptimizeRequest(src, des, quality);
+        await sendOptimizeRequest(src, des, quality);
+        this.dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('optimze_success'));
     }
 
     onClickSource = async (src) => {
@@ -85,17 +89,19 @@ class OptimizeImageTab extends React.Component {
 
     render() {
         const { classes, t } = this.props;
-        const { files, src, des } = this.state;
+        const { files, src, des, quality } = this.state;
         return (
           <Grid container spacing={8}>
             <Grid item xs={3}>
               <Paper className={css.functions_wrapper}>
                 <FileChooser
+                  isFolder
                   fileFolder={src}
                   label={t('source_folder')}
                   onChosenFolder={this.onClickSource}
                 />
                 <FileChooser
+                  isFolder
                   fileFolder={des}
                   label={t('destination_folder')}
                   onChosenFolder={this.onClickDestination}
@@ -107,7 +113,7 @@ class OptimizeImageTab extends React.Component {
                   className={classes.textField}
                   margin="normal"
                   variant="outlined"
-                  value={this.state.quality}
+                  value={quality}
                   onChange={this.handleChangeJPGQuality}
                 />
                 <Button
@@ -116,8 +122,9 @@ class OptimizeImageTab extends React.Component {
                   className={classes.button}
                   onClick={this.onClickOptimize}
                 >
-                  { t('optimize')}
+                  {t('optimize')}
                 </Button>
+                <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
             <Grid item xs={9}>
@@ -125,15 +132,15 @@ class OptimizeImageTab extends React.Component {
                 <Table>
                   <TableHead >
                     <TableRow>
-                      <TableCell className={classes.header}>{ t('path')}</TableCell>
-                      <TableCell className={classes.header}>{ t('name')}</TableCell>
+                      <TableCell className={classes.header}>{t('path')}</TableCell>
+                      <TableCell className={classes.header}>{t('name')}</TableCell>
                     </TableRow>
                   </TableHead>
 
                   <TableBody>
                     {files.map((file, index) => (
                       <FileOptimizeRow
-                        key={`OptimizeImageTab${index}`} // eslint-disable-line
+                                        key={`OptimizeImageTab${index}`} // eslint-disable-line
                         fileName={file.base}
                         filePath={src + file.subPath}
                       />))}

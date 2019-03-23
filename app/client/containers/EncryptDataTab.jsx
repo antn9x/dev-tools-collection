@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -12,12 +12,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import { translate } from 'react-i18next';
 
-import { getLastSourceEncryptFolder, getLastDestinationEncryptFolder, setLastSourceEncryptFolder, getLastEncryptKey, setLastDestinationEncryptFolder } from '../storage/EncryptDataTabData';
+import { getLastSourceEncryptFolder, getLastDestinationEncryptFolder, setLastSourceEncryptFolder, getLastEncryptKey, setLastDestinationEncryptFolder, setLastEncryptKey } from '../storage/EncryptDataTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
 import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
 import { sendGetFolderFilesRequest, sendEncryptRequest } from '../network/api';
+import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({
     root: {
@@ -37,21 +38,29 @@ class EncryptDataTab extends React.Component {
 
     constructor(props) {
         super(props);
+        const src = getLastSourceEncryptFolder();
+        if (src) {
+            this.onClickSource(src);
+        }
         this.state = {
-            src: getLastSourceEncryptFolder(),
+            src,
             des: getLastDestinationEncryptFolder(),
             key: getLastEncryptKey() || this.props.t('default_encrypt_key'),
             files: []
         };
+        this.dialogAlert = createRef();
     }
 
-    onClickEncrypt = () => {
+    onClickEncrypt = async () => {
         const { files, src, des, key } = this.state;
         if (!src) {
             console.log('Import src pls!');
+            this.dialogAlert.current.showDialog(this.props.t('warning'), this.props.t('import_source'));
             return;
         }
-        sendEncryptRequest(files, src, des, key);
+        const names = files.map(file => `${file.subPath}/${file.base}`);
+        await sendEncryptRequest(names, src, des, key);
+        this.dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('encrypt_success'));
     }
 
     onClickSource = async (src) => {
@@ -76,7 +85,9 @@ class EncryptDataTab extends React.Component {
     }
 
     handleChangeKey = (event) => {
-        this.setState({ key: event.target.value });
+        const key = event.target.value;
+        this.setState({ key });
+        setLastEncryptKey(key);
     }
 
     handleChangeDestination = (event) => {
@@ -91,11 +102,13 @@ class EncryptDataTab extends React.Component {
             <Grid item xs={3}>
               <Paper className={css.functions_wrapper}>
                 <FileChooser
+                  isFolder
                   fileFolder={src}
                   label={t('source_folder')}
                   onChosenFolder={this.onClickSource}
                 />
                 <FileChooser
+                  isFolder
                   fileFolder={des}
                   label={t('destination_folder')}
                   onChosenFolder={this.onClickDestination}
@@ -118,6 +131,7 @@ class EncryptDataTab extends React.Component {
                 >
                   {t('encrypt_data')}
                 </Button>
+                <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
             <Grid item xs={9}>

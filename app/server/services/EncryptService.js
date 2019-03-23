@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import {
-	Logger
-} from '../utils/Logger';
+import Logger from '../utils/Logger';
 
 function encryptDecryptBinaryXOR(input, key) {
 	const output = Buffer.alloc(input.length);
@@ -20,10 +18,9 @@ export const encrypt = (imageData) => {
 		key = 'encryptDecryptBinaryXOR',
 		name
 	} = imageData;
-	const fileName = path.resolve(source, name);
+	const fileName = path.join(source, name);
 	const newPath = destination ? path.join(destination, name) : fileName;
 	const fileContent = fs.readFileSync(fileName);
-	// console.log("Encrypt Open file :" + fileContent);
 	const encryptedData = encryptDecryptBinaryXOR(fileContent, key);
 	// console.log("Encrypted Open file :" + encryptedData);
 	const stream = fs.createWriteStream(newPath);

@@ -1,4 +1,9 @@
 {
+  "optimze_success": "Tối ưu hoá thành công!",
+  "import_source": "Xin chọn thư mục nguồn!",
+  "ok": "Đồng ý.",
+  "notification": "Thông báo!",
+  "warning": "Cảnh báo!",
   "default_encrypt_key": "Khoá mã hoá bí mật điền tại đây",
   "encrypt_data": "Mã hoá dữ liệu",
   "encrypt_key": "Khoá mã hoá",

@@ -4,7 +4,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
-// import path from 'path';
 
 class FileDisplay extends Component {
   checkFile = () => {
@@ -32,7 +31,7 @@ class FileDisplay extends Component {
             label="Pattern"
             margin="normal"
             variant="outlined"
-            fullWidth="true"
+            fullWidth
             value={demension}
             
           />
@@ -45,8 +44,8 @@ class FileDisplay extends Component {
 FileDisplay.propTypes = {
     clickCheckbox: PropTypes.func.isRequired,
     file: PropTypes.object.isRequired,
-    width: PropTypes.string.isRequired,
-    height: PropTypes.string.isRequired
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
 };
 
 export default FileDisplay;
