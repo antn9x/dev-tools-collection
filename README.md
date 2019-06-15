@@ -6,3 +6,6 @@
 # DEV
 - npm run start-main-dev
 - npm run start-renderer-dev
+
+# RELEASE
+- [v1.0.1](https://github.com/antn9x/dev-tools-collection/releases)
