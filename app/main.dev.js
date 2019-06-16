@@ -11,6 +11,7 @@
  * @flow
  */
 import { app, BrowserWindow } from 'electron';
+import MenuBuilder from './menu';
 import Logger from './server/utils/Logger';
 import Router from './server/router/Router';
 
@@ -96,6 +97,6 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
 });

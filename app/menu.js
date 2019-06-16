@@ -1,5 +1,5 @@
-// @flow
-import { app, Menu, shell, BrowserWindow } from 'electron';
+import { app, Menu, shell } from 'electron';
+import { CHANGE_LANGUAGE, CHANGE_FUNCTION } from './constant.message';
 
 export default class MenuBuilder {
   mainWindow;
@@ -128,6 +128,26 @@ export default class MenuBuilder {
         }
       ]
     };
+    const subMenuLanguage = {
+      label: 'Language',
+      submenu: [
+        {
+          label: 'English',
+          accelerator: 'Ctrl+Command+E',
+          click: () => {
+            this.mainWindow.webContents.send(CHANGE_LANGUAGE, 'en');
+          }
+        },
+        {
+          label: 'Vietnamese',
+          accelerator: 'Ctrl+Command+V',
+          click: () => {
+            this.mainWindow.webContents.send(CHANGE_LANGUAGE, 'vn');
+          }
+        },
+
+      ]
+    };
     const subMenuWindow = {
       label: 'Window',
       submenu: [
@@ -172,11 +192,29 @@ export default class MenuBuilder {
         }
       ]
     };
+    const subMenuResizeImage = {
+      label: 'Resize Image',
+      submenu: [
+        {
+          label: 'Resize Images folder',
+          click() {
+            this.mainWindow.webContents.send(CHANGE_FUNCTION, 2);
+          }
+        },
+        {
+          label: 'Create Mobile Icons (cocos)',
+          click() {
+            this.mainWindow.webContents.send(CHANGE_FUNCTION, 3);
+          }
+        },
+      ]
+    };
 
     const subMenuView =
       process.env.NODE_ENV === 'development' ? subMenuViewDev : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [subMenuAbout, subMenuEdit, subMenuView, subMenuLanguage,
+      subMenuResizeImage, subMenuWindow, subMenuHelp];
   }
 
   buildDefaultTemplate() {
@@ -202,41 +240,41 @@ export default class MenuBuilder {
         submenu:
           process.env.NODE_ENV === 'development'
             ? [
-                {
-                  label: '&Reload',
-                  accelerator: 'Ctrl+R',
-                  click: () => {
-                    this.mainWindow.webContents.reload();
-                  }
-                },
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                },
-                {
-                  label: 'Toggle &Developer Tools',
-                  accelerator: 'Alt+Ctrl+I',
-                  click: () => {
-                    this.mainWindow.toggleDevTools();
-                  }
+              {
+                label: '&Reload',
+                accelerator: 'Ctrl+R',
+                click: () => {
+                  this.mainWindow.webContents.reload();
                 }
-              ]
+              },
+              {
+                label: 'Toggle &Full Screen',
+                accelerator: 'F11',
+                click: () => {
+                  this.mainWindow.setFullScreen(
+                    !this.mainWindow.isFullScreen()
+                  );
+                }
+              },
+              {
+                label: 'Toggle &Developer Tools',
+                accelerator: 'Alt+Ctrl+I',
+                click: () => {
+                  this.mainWindow.toggleDevTools();
+                }
+              }
+            ]
             : [
-                {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
+              {
+                label: 'Toggle &Full Screen',
+                accelerator: 'F11',
+                click: () => {
+                  this.mainWindow.setFullScreen(
+                    !this.mainWindow.isFullScreen()
+                  );
                 }
-              ]
+              }
+            ]
       },
       {
         label: 'Help',

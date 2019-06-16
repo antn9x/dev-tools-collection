@@ -6,12 +6,14 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import { translate } from 'react-i18next';
+import { ipcRenderer } from 'electron';
 
 import RenameTab from './containers/RenameTab';
 import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
 import EncryptDataTab from './containers/EncryptDataTab';
 import ConvertSpriteSheetExt from './containers/ConvertSpriteSheetExt';
+import { CHANGE_FUNCTION } from '../constant.message';
 
 function TabContainer(props) {
   return (
@@ -36,7 +38,15 @@ const styles = theme => ({
 class App extends React.Component {
   state = {
     tab: 4,
+    type: 0,
   };
+
+  componentDidMount() {
+    ipcRenderer.on(CHANGE_FUNCTION, (sender, type) => {
+      const tab = type;
+      this.setState({ tab, type });
+    });
+  }
 
   handleChange = (event, tab) => {
     this.setState({ tab });
@@ -44,7 +54,7 @@ class App extends React.Component {
 
   render() {
     const { classes, t } = this.props;
-    const { tab } = this.state;
+    const { tab, type } = this.state;
 
     return (
       <div className={classes.root}>
@@ -57,11 +67,13 @@ class App extends React.Component {
             <Tab label={t('convert_sprite_sheet_ext')} />
           </Tabs>
         </AppBar>
-        {tab === 0 && <TabContainer><RenameTab /></TabContainer>}
-        {tab === 1 && <TabContainer><ResizeTab /></TabContainer>}
-        {tab === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
-        {tab === 3 && <TabContainer><EncryptDataTab /></TabContainer>}
-        {tab === 4 && <TabContainer><ConvertSpriteSheetExt /></TabContainer>}
+        <TabContainer>
+          {tab === 0 && <RenameTab />}
+          {tab === 1 && <ResizeTab functionType={type} />}
+          {tab === 2 && <OptimizeImageTab />}
+          {tab === 3 && <EncryptDataTab />}
+          {tab === 4 && <ConvertSpriteSheetExt />}
+        </TabContainer>
       </div>
     );
   }

@@ -1,6 +1,4 @@
-import {
-  ipcRenderer
-} from 'electron';
+import { ipcRenderer } from 'electron';
 import {
   OPTIMIZE,
   GET_FOLDER_FILES,
@@ -87,4 +85,4 @@ export const sendResizeRequest = (src, des, names, width, height) =>
  */
 export const sendLogRequest = (message) => sendRequest(LOG_DATA, message);
 
-export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, {type, src, des});
+export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, { type, src, des });
