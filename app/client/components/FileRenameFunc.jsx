@@ -16,7 +16,6 @@ class FileRenameFunc extends Component {
       <React.Fragment>
         <TextField
           id="outlined-name"
-          style={{ margin: '8px 0' }}
           variant="outlined"
           label={label}
           value={defaultExt}

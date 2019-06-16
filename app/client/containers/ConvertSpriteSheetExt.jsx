@@ -17,7 +17,6 @@ import {
   getLastConvertType
 } from '../storage/ConvertSpriteSheetData';
 
-import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
 import { sendConvertRequest } from '../network/api';
 import DialogAlert from '../components/DialogAlert';
@@ -91,8 +90,8 @@ class ConvertDataTab extends React.Component {
     const { type, src, des } = this.state;
     return (
       <Grid container spacing={8}>
-        <Grid item xs={3}>
-          <Paper className={css.functions_wrapper}>
+        <Grid item lg={4}>
+          <Paper>
             <FileChooser
               fileFolder={src}
               label={t('source_folder')}
@@ -109,6 +108,8 @@ class ConvertDataTab extends React.Component {
             <Button
               variant="outlined"
               color="secondary"
+              size="large"
+              fullWidth
               className={classes.button}
               onClick={this.onClickConvert}
             >
@@ -117,7 +118,7 @@ class ConvertDataTab extends React.Component {
             <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
           </Paper>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item lg={8}>
           <Paper className={classes.paper}>
             <Table>
               <TableHead >

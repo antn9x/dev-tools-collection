@@ -14,10 +14,11 @@ import OptimizeImageTab from './containers/OptimizeImageTab';
 import EncryptDataTab from './containers/EncryptDataTab';
 import ConvertSpriteSheetExt from './containers/ConvertSpriteSheetExt';
 import { CHANGE_FUNCTION } from '../constant.message';
+import CreateMobileIcons from './containers/CreateMobileIcons';
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 24 }}>
       {props.children}
     </Typography>
   );
@@ -37,7 +38,7 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
-    tab: 4,
+    tab: 2,
     type: 0,
   };
 
@@ -52,9 +53,27 @@ class App extends React.Component {
     this.setState({ tab });
   };
 
+  getTab = (tab, type) => {
+    switch (tab) {
+      case 0:
+        return RenameTab;
+      case 1:
+        return type ? CreateMobileIcons : ResizeTab;
+      case 2:
+        return OptimizeImageTab;
+      case 3:
+        return EncryptDataTab;
+      case 4:
+        return ConvertSpriteSheetExt;
+      default:
+        return RenameTab;
+    }
+  }
+
   render() {
     const { classes, t } = this.props;
     const { tab, type } = this.state;
+    const TabComponent = this.getTab(tab, type);
 
     return (
       <div className={classes.root}>
@@ -68,11 +87,7 @@ class App extends React.Component {
           </Tabs>
         </AppBar>
         <TabContainer>
-          {tab === 0 && <RenameTab />}
-          {tab === 1 && <ResizeTab functionType={type} />}
-          {tab === 2 && <OptimizeImageTab />}
-          {tab === 3 && <EncryptDataTab />}
-          {tab === 4 && <ConvertSpriteSheetExt />}
+          <TabComponent />
         </TabContainer>
       </div>
     );

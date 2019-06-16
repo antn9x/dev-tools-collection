@@ -135,7 +135,7 @@ class ResizeTab extends React.Component {
 
     return (
       <Grid container spacing={8}>
-        <Grid item xs={3}>
+        <Grid item lg={4}>
           <Paper className={classes.paper}>
             <FileChooser
               isFolder
@@ -176,6 +176,8 @@ class ResizeTab extends React.Component {
             <Button
               variant="outlined"
               color="secondary"
+              size="large"
+              fullWidth
               style={{ marginTop: 8 }}
               className={classes.button}
               onClick={this.onClickResize}
@@ -185,7 +187,7 @@ class ResizeTab extends React.Component {
             <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
           </Paper>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item lg={8}>
           <Paper className={classes.paper}>
             <Table>
               <TableHead >

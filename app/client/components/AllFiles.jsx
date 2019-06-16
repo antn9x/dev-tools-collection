@@ -86,7 +86,7 @@ class AllFiles extends Component {
             const isSelected = this.isSelected(index);
 
             return (
-              <TableRow key={index}>
+              <TableRow key={file.name}>
                 <TableCell padding="checkbox">
                   <Checkbox
                     checked={isSelected}

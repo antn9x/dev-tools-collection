@@ -160,6 +160,7 @@
     "node-dir": "^0.1.17",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^10.1.5",
     "react-hot-loader": "^4.11.0",
     "react-i18next": "^8.3.8",
     "react-router": "^4.2.0",

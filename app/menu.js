@@ -197,14 +197,14 @@ export default class MenuBuilder {
       submenu: [
         {
           label: 'Resize Images folder',
-          click() {
-            this.mainWindow.webContents.send(CHANGE_FUNCTION, 2);
+          click: () => {
+            this.mainWindow.webContents.send(CHANGE_FUNCTION, 0);
           }
         },
         {
           label: 'Create Mobile Icons (cocos)',
-          click() {
-            this.mainWindow.webContents.send(CHANGE_FUNCTION, 3);
+          click: () => {
+            this.mainWindow.webContents.send(CHANGE_FUNCTION, 1);
           }
         },
       ]
