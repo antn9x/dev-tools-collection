@@ -105,5 +105,48 @@ export const getBoolForKey = (key, defaultValue) => {
  * @param {boolean} value 
  */
 export const setBoolForKey = (key, value) => {
-  setStringForKey(key, value);
+  setStringForKey(key, value.toString());
+};
+
+/**
+ * Save a bool from local storage
+ * @param {string} varName 
+ * @param {string} type 
+ */
+export const STRING = 'string';
+export const INTEGER = 'integer';
+export const FLOAT = 'float';
+export const OBJECT = 'object';
+export const BOOLEAN = 'boolean';
+
+export const useStorage = (varName, type) => {
+  const key = `${varName}, ${type}`;
+  let getter;
+  let setter;
+  switch (type) {
+    case INTEGER:
+      getter = getIntForKey;
+      setter = setIntForKey;
+      break;
+    case FLOAT:
+      getter = getFloatForKey;
+      setter = setFloatForKey;
+      break;
+    case OBJECT:
+      getter = getObjectForKey;
+      setter = setObjectForKey;
+      break;
+    case BOOLEAN:
+      getter = getBoolForKey;
+      setter = setBoolForKey;
+      break;
+    case STRING:
+    default:
+      getter = getStringForKey;
+      setter = setStringForKey;
+  }
+  return [
+    (defaultValue) => getter(key, defaultValue),
+    (value) => setter(key, value),
+  ];
 };

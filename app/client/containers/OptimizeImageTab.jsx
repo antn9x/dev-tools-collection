@@ -54,7 +54,7 @@ class OptimizeImageTab extends Component {
       return;
     }
     await sendOptimizeRequest(src, des, quality);
-    this.dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('optimze_success'));
+    this.dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('optimize_success'));
   }
 
   onClickSource = async (src) => {

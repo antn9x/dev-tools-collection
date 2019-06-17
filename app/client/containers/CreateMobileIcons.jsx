@@ -10,9 +10,8 @@ import PaperDropZone from '../components/PaperDropZone';
 import DialogAlert from '../components/DialogAlert';
 
 import { sendCreateMobileIconsRequest } from '../network/api';
-
-const SRC_LAST_OPTIMIZE_TOOL = 'src_Last_Optimize_tool';
-const DES_LAST_OPTIMIZE_TOOL = 'des_Last_Optimize_tool';
+import { getLastSourceCreateMobileIcons, getLastDestinationCreateMobileIcons,
+   setLastSourceCreateMobileIcons, setLastDestinationCreateMobileIcons } from '../storage/CreateMobileIconsData';
 
 const useStyles = makeStyles({
   root: {
@@ -23,33 +22,33 @@ const useStyles = makeStyles({
 const CreateMobileIcons = () => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [src, setSrc] = useState(localStorage.getItem(SRC_LAST_OPTIMIZE_TOOL) || '');
-  const [des, setDes] = useState(localStorage.getItem(DES_LAST_OPTIMIZE_TOOL) || '');
+  const [src, setSrc] = useState(getLastSourceCreateMobileIcons(''));
+  const [des, setDes] = useState(getLastDestinationCreateMobileIcons(''));
   const dialogAlert = useRef();
 
   const onDropIcon = (files) => {
-    console.log(files);
+    // console.log(files);
     setSrc(files[0].path);
-    localStorage.setItem(SRC_LAST_OPTIMIZE_TOOL, files[0].path);
+    setLastSourceCreateMobileIcons(files[0].path);
   };
 
   const onChangeDestination = (files) => {
     setDes(files);
-    localStorage.setItem(DES_LAST_OPTIMIZE_TOOL, files);
+    setLastDestinationCreateMobileIcons(files);
   };
 
   const onClickOptimize = async () => {
     if (!src) {
-      alert('Please enter source folder!');
+      dialogAlert.current.showDialog(t('warning'), t('import_source'));
       return;
     }
     if (!des) {
-      alert('Please enter destination folder!');
+      dialogAlert.current.showDialog(t('warning'), t('import_destination'));
       return;
     }
-    console.log(src, des);
+    // console.log(src, des);
     await sendCreateMobileIconsRequest(src, des);
-    dialogAlert.current.showDialog(this.props.t('notification'), this.props.t('optimze_success'));
+    dialogAlert.current.showDialog(t('notification'), t('optimize_success'));
   };
 
   return (

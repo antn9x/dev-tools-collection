@@ -1,6 +1,7 @@
 {
-  "optimze_success": "Tối ưu hoá thành công!",
-  "import_source": "Xin chọn thư mục nguồn!",
+  "optimize_success": "Tối ưu hoá thành công!",
+  "import_destination": "Xin chọn thư mục nguồn!",
+  "import_source": "Xin chọn thư mục đích!",
   "ok": "Đồng ý.",
   "notification": "Thông báo!",
   "warning": "Cảnh báo!",
