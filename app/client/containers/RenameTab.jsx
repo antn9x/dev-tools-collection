@@ -1,23 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+/* eslint-disable react/prop-types */
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { withTranslation } from 'react-i18next';
+import TextField from '@material-ui/core/TextField';
+import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   setLastSourceRenameFolder, getLastSourceRenameFolder,
   setLastDestinationRenameFolder, getLastDestinationRenameFolder
 } from '../storage/RenameTabData';
 
-import { sendGetFolderFilesRequest, sendModifyFileExtension, sendRename } from '../network/api';
+import { sendGetFolderFilesRequest, sendRename } from '../network/api';
 
 import FileChooser from '../components/FileChooser';
-import AllFiles from '../components/AllFiles';
-import FileRenameFunc from '../components/FileRenameFunc';
+import ReactVirtualizedTable from '../components/ReactVirtualizedTable';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
@@ -25,228 +25,142 @@ const styles = theme => ({
     padding: theme.spacing(2),
     color: theme.palette.text.secondary,
   },
-});
+}));
 
-class RenameTab extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      src: getLastSourceRenameFolder(),
-      des: getLastDestinationRenameFolder(),
-      files: [],
-      filesSelectedRename: [],
-      oldExt: '',
-      newExt: '',
-      oldName: '',
-      newName: ''
-    };
-  }
+const columns = [
+  {
+    width: 50,
+    label: 'isSelected',
+    dataKey: 'isSelected',
+    isCheckBox: true,
+  },
+  {
+    width: 320,
+    label: 'Old file',
+    dataKey: 'base',
+    numeric: true,
+  },
+  {
+    width: 520,
+    label: 'New Name',
+    dataKey: 'newName',
+    numeric: true,
+  },
+];
+function RenameTab() {
+  const classes = useStyles();
+  const { t } = useTranslation();
+  const [src, setSrc] = useState(getLastSourceRenameFolder(''));
+  const [des, setDes] = useState(getLastDestinationRenameFolder(''));
+  const [files, setFiles] = useState([]);
+  const [oldName, setOldName] = useState([]);
+  const [newName, setNewName] = useState([]);
 
-  componentDidMount() {
-    this.handleGetSourceFolder(this.state.src);
-  }
+  useEffect(() => {
+    if (src)
+      handleGetSourceFolder(src);
+  }, [src]);
 
-  handleGetDestinationFolder = (des) => {
-    this.setState({
-      des
-    });
-
+  const handleChangeDes = (destination) => {
+    setDes(destination);
     setLastDestinationRenameFolder(des);
-  }
+  };
 
-  handleGetSourceFolder = async (src) => {
-    const response = await sendGetFolderFilesRequest(src);
+  const handleGetSourceFolder = async (source) => {
+    const response = await sendGetFolderFilesRequest(source);
+    // console.log('response Not null', source, response);
+    setFiles(response);
+    setSrc(source);
+    setLastSourceRenameFolder(source);
+  };
 
-    this.setState({
-      files: response,
-      src
-    });
-
-    setLastSourceRenameFolder(src);
-  }
-
-  handleOldExt = (oldExt) => {
-    this.setState({
-      oldExt
-    });
-  }
-
-  handleNewExt = (newExt) => {
-    this.setState({
-      newExt
-    });
-  }
-
-  handleOldName = (oldName) => {
-    this.setState({
-      oldName
-    });
-  }
-
-  handleNewName = (newName) => {
-    this.setState({
-      newName
-    });
-  }
-
-  handleModifyExt = () => {
-    const { src, des, oldExt, newExt } = this.state;
-
-    if (!oldExt || !newExt) {
-      console.log('Not null');
-      return;
-    }
-
-    const newExtName = newExt.indexOf('.') !== -1 ? newExt : `.${newExt}`;
-    const oldExtName = oldExt.indexOf('.') !== -1 ? oldExt : `.${oldExt}`;
-
-    sendModifyFileExtension(src, des, oldExtName, newExtName).then(response => {
-      this.handleGetSourceFolder(src);
-
-      return response;
-    }).catch();
-  }
-
-  handleRename = () => {
-    const { filesSelectedRename, src, des, oldName, newName } = this.state;
-
+  const handleRename = () => {
     if (!oldName || !newName) {
       console.log('Not null');
       return;
     }
-
-    if (!filesSelectedRename.length) {
+    const selected = files.filter(f => f.isSelected);
+    if (!selected.length) {
       console.log('Please select file!');
       return;
     }
-
-    sendRename(filesSelectedRename, src, des, oldName, newName).then(response => {
-      this.handleGetSourceFolder(src);
-      this.child.defaultSelect();
-
+    sendRename(selected, src, des, oldName, newName).then(response => {
+      handleGetSourceFolder(src);
       return response;
     }).catch();
-  }
+  };
 
-  handleChangeDes = (des) => {
-    this.setState({
-      des
-    }, () => {
-      setLastDestinationRenameFolder(des);
-    });
-  }
+  const onRowClick = ({ index }) => {
+    // console.log('Please select index!',index, files);
+    files[index].isSelected = !files[index].isSelected;
+    setFiles(files);
+  };
 
-  handleFilesSelectRename = (file, isSelect) => {
-    if (isSelect) {
-      this.setState({
-        filesSelectedRename: [...this.state.filesSelectedRename, file]
-      });
-    } else {
-      const index = this.state.filesSelectedRename.indexOf(file);
-      this.setState({
-        filesSelectedRename: this.state.filesSelectedRename.filter((_, i) => i !== index)
-      });
-    }
-  }
-
-  render() {
-    const { files, src, des, oldExt, newExt, oldName, newName } = this.state;
-    const { classes, t } = this.props;
-
-    return (
-      <Grid container spacing={8}>
-        <Grid item lg={4}>
-          <Paper>
-            <Grid container>
-              <Grid item lg={12}>
-                <FileChooser
-                  isFolder
-                  onChosenFolder={this.handleGetSourceFolder}
-                  fileFolder={src}
-                  label={t('source_folder')}
-                  title={t('title_source')}
-                />
-              </Grid>
-              <Grid item lg={12}>
-                <FileChooser
-                  isFolder
-                  onChosenFolder={this.handleChangeDes}
-                  fileFolder={des}
-                  label={t('destination_folder')}
-                  title={t('title_des')}
-                />
-              </Grid>
-              <Grid item lg={12} container>
-                <Grid item lg={4}>
-                  <FileRenameFunc
-                    defaultExt={oldExt}
-                    name={this.handleOldExt}
-                    label={t('old_ext')}
-                  />
-                </Grid>
-                <Grid item lg={4}>
-                  <FileRenameFunc
-                    defaultExt={newExt}
-                    name={this.handleNewExt}
-                    label={t('new_ext')}
-                  />
-                </Grid>
-                <Grid item lg={4}>
-                  <Button
-                    size="large"
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleModifyExt}
-                  >Modify
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item lg={12} container>
-                <Grid item lg={4}>
-                  <FileRenameFunc
-                    defaultExt={oldName}
-                    name={this.handleOldName}
-                    label={t('old_name')}
-                  />
-                </Grid>
-                <Grid item lg={4}>
-                  <FileRenameFunc
-                    defaultExt={newName}
-                    name={this.handleNewName}
-                    label={t('new_name')}
-                  />
-                </Grid>
-                <Grid item lg={4}>
-                  <Button
-                    size="large"
-                    variant="contained"
-                    color="primary"
-                    onClick={this.handleRename}
-                  >Rename
-                  </Button>
-                </Grid>
-              </Grid>
+  return (
+    <Grid container spacing={4}>
+      <Grid item lg={4}>
+        <Paper>
+          <Grid container>
+            <Grid item lg={12}>
+              <FileChooser
+                isFolder
+                onChosenFolder={handleGetSourceFolder}
+                fileFolder={src}
+                label={t('source_folder')}
+                title={t('title_source')}
+              />
             </Grid>
-          </Paper>
-        </Grid>
-        <Grid item xs={8}>
-          <Paper className={classes.paper}>
-            <AllFiles
-              ref={instance => { this.child = instance; }}
-              files={files}
-              src={src}
-              filesSelectRename={this.handleFilesSelectRename}
-            />
-          </Paper>
-        </Grid>
+            <Grid item lg={12}>
+              <FileChooser
+                isFolder
+                onChosenFolder={handleChangeDes}
+                fileFolder={des}
+                label={t('destination_folder')}
+                title={t('title_des')}
+              />
+            </Grid>
+            <Grid item lg={12}>
+              <TextField
+                label={t("old_name")}
+                placeholder=".js"
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                onChange={evt => setOldName(evt.target.value)}
+                defaultValue={oldName}
+              />
+            </Grid>
+            <Grid item lg={12}>
+              <TextField
+                label={t("new_name")}
+                placeholder=".ts"
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                onChange={evt => setNewName(evt.target.value)}
+                defaultValue={newName}
+              />
+            </Grid>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              fullWidth
+              onClick={handleRename}
+            >Rename
+            </Button>
+          </Grid>
+        </Paper>
       </Grid>
-    );
-  }
+      <Grid item xs={8}>
+        <ReactVirtualizedTable
+          columns={columns}
+          rows={files}
+          onRowClick={onRowClick}
+        />
+      </Grid>
+    </Grid>
+  );
 }
 
-RenameTab.propTypes = {
-  classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired
-};
-
-export default withStyles(styles)(withTranslation('translations')(RenameTab));
+export default RenameTab;

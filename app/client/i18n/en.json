@@ -29,5 +29,5 @@
   "old_name": "Old Name",
   "new_name": "New Name",
   "title_source": "Select folder",
-  "title_des": "Select destination folder, to empty override current folder"
+  "title_des": "Select destination folder, empty to override current folder"
 }

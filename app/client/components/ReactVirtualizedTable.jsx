@@ -5,8 +5,10 @@ import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
+import Checkbox from '@material-ui/core/Checkbox';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Table, { Column } from 'react-virtualized/dist/commonjs/Table';
+import every from 'lodash/every';
 
 const styles = () => ({
   flexContainer: {
@@ -49,7 +51,7 @@ class MuiVirtualizedTable extends React.PureComponent {
     });
   };
 
-  cellRenderer = ({ cellData, columnIndex, dataKey }) => {
+  cellRenderer = ({ cellData, columnIndex, rowIndex }) => {
     const {
       columns, classes, rowHeight, onRowClick
     } = this.props;
@@ -63,14 +65,15 @@ class MuiVirtualizedTable extends React.PureComponent {
         style={{ height: rowHeight }}
         align={(columnIndex != null && columns[columnIndex].numeric) || false ? 'right' : 'left'}
       >
-        {dataKey === 'text' ? <span dangerouslySetInnerHTML={{ __html: cellData }} />
+        {columns[columnIndex].isCheckBox ?
+          <Checkbox checked={cellData} />
           : cellData}
       </TableCell>
     );
   };
 
   headerRenderer = ({ label, columnIndex }) => {
-    const { headerHeight, columns, classes } = this.props;
+    const { headerHeight, columns, classes, isSelectedAll } = this.props;
 
     return (
       <TableCell
@@ -80,7 +83,9 @@ class MuiVirtualizedTable extends React.PureComponent {
         style={{ height: headerHeight }}
         align={columns[columnIndex].numeric || false ? 'center' : 'left'}
       >
-        <span>{label}</span>
+        {columns[columnIndex].isCheckBox ?
+          <Checkbox checked={isSelectedAll} />
+          : <span>{label}</span>}
       </TableCell>
     );
   };
@@ -106,7 +111,7 @@ class MuiVirtualizedTable extends React.PureComponent {
                   ...headerProps,
                   columnIndex: index,
                 })
-                  }
+                }
                 className={classes.flexContainer}
                 cellRenderer={this.cellRenderer}
                 dataKey={dataKey}
@@ -123,6 +128,7 @@ class MuiVirtualizedTable extends React.PureComponent {
 MuiVirtualizedTable.propTypes = {
   classes: PropTypes.object.isRequired,
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  isSelectedAll: PropTypes.bool.isRequired,
   headerHeight: PropTypes.number,
   onRowClick: PropTypes.func,
   rowHeight: PropTypes.number,
@@ -136,7 +142,11 @@ function ReactVirtualizedTable({
 }) {
   return (
     <Paper style={{ height: 400, width: '100%' }}>
+      {rows.length}
+      {rows.length&&rows[1].isSelected}
+      asdf{rows.map(r=><span>{r.isSelected}</span>)}asf
       <VirtualizedTable
+        isSelectedAll={rows.every(r => r.isSelected)}
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
         columns={columns}

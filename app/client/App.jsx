@@ -38,7 +38,7 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
-    tab: 2,
+    tab: 0,
     type: 0,
   };
 
