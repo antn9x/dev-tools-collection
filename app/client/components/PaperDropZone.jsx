@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Dropzone from 'react-dropzone';
 
 export default function PaperDropzone({
@@ -18,3 +20,8 @@ export default function PaperDropzone({
     </Dropzone>
   );
 }
+
+PaperDropzone.propTypes = {
+  placeHolder: PropTypes.string.isRequired,
+  onDrop: PropTypes.func.isRequired,
+};

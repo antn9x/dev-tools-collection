@@ -17,8 +17,6 @@ import Router from './server/router/Router';
 
 let mainWindow = null;
 
-Logger.log('Server is starting... ');
-
 process.on('uncaughtException', (err) => {
   Logger.log('Connection was not established.');
   Logger.error(err);
