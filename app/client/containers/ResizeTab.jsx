@@ -202,7 +202,7 @@ class ResizeTab extends React.Component {
                     />
                   </TableCell>
                   <TableCell >{t('name')}</TableCell>
-                  <TableCell >{t('demension')}</TableCell>
+                  <TableCell >{t('dimension')}</TableCell>
                 </TableRow>
               </TableHead>
 
