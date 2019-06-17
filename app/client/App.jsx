@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { ipcRenderer } from 'electron';
 
 import RenameTab from './containers/RenameTab';
@@ -99,4 +99,4 @@ App.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(App));
+export default withStyles(styles)(withTranslation('translations')(App));

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import {
   setLastSourceRenameFolder, getLastSourceRenameFolder,
@@ -22,7 +22,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     color: theme.palette.text.secondary,
   },
 });
@@ -156,76 +156,78 @@ class RenameTab extends React.Component {
     return (
       <Grid container spacing={8}>
         <Grid item lg={4}>
-          <Grid container>
-            <Grid item lg={12}>
-              <FileChooser
-                isFolder
-                onChosenFolder={this.handleGetSourceFolder}
-                fileFolder={src}
-                label={t('source_folder')}
-                title={t('title_source')}
-              />
-            </Grid>
-            <Grid item lg={12}>
-              <FileChooser
-                isFolder
-                onChosenFolder={this.handleChangeDes}
-                fileFolder={des}
-                label={t('destination_folder')}
-                title={t('title_des')}
-              />
-            </Grid>
-            <Grid item lg={12} container>
-              <Grid item lg={4}>
-                <FileRenameFunc
-                  defaultExt={oldExt}
-                  name={this.handleOldExt}
-                  label={t('old_ext')}
+          <Paper>
+            <Grid container>
+              <Grid item lg={12}>
+                <FileChooser
+                  isFolder
+                  onChosenFolder={this.handleGetSourceFolder}
+                  fileFolder={src}
+                  label={t('source_folder')}
+                  title={t('title_source')}
                 />
               </Grid>
-              <Grid item lg={4}>
-                <FileRenameFunc
-                  defaultExt={newExt}
-                  name={this.handleNewExt}
-                  label={t('new_ext')}
+              <Grid item lg={12}>
+                <FileChooser
+                  isFolder
+                  onChosenFolder={this.handleChangeDes}
+                  fileFolder={des}
+                  label={t('destination_folder')}
+                  title={t('title_des')}
                 />
               </Grid>
-              <Grid item lg={4}>
-                <Button
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleModifyExt}
-                >Modify
-                </Button>
+              <Grid item lg={12} container>
+                <Grid item lg={4}>
+                  <FileRenameFunc
+                    defaultExt={oldExt}
+                    name={this.handleOldExt}
+                    label={t('old_ext')}
+                  />
+                </Grid>
+                <Grid item lg={4}>
+                  <FileRenameFunc
+                    defaultExt={newExt}
+                    name={this.handleNewExt}
+                    label={t('new_ext')}
+                  />
+                </Grid>
+                <Grid item lg={4}>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleModifyExt}
+                  >Modify
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item lg={12} container>
+                <Grid item lg={4}>
+                  <FileRenameFunc
+                    defaultExt={oldName}
+                    name={this.handleOldName}
+                    label={t('old_name')}
+                  />
+                </Grid>
+                <Grid item lg={4}>
+                  <FileRenameFunc
+                    defaultExt={newName}
+                    name={this.handleNewName}
+                    label={t('new_name')}
+                  />
+                </Grid>
+                <Grid item lg={4}>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    onClick={this.handleRename}
+                  >Rename
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item lg={12} container>
-              <Grid item lg={4}>
-                <FileRenameFunc
-                  defaultExt={oldName}
-                  name={this.handleOldName}
-                  label={t('old_name')}
-                />
-              </Grid>
-              <Grid item lg={4}>
-                <FileRenameFunc
-                  defaultExt={newName}
-                  name={this.handleNewName}
-                  label={t('new_name')}
-                />
-              </Grid>
-              <Grid item lg={4}>
-                <Button
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleRename}
-                >Rename
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
+          </Paper>
         </Grid>
         <Grid item xs={8}>
           <Paper className={classes.paper}>
@@ -247,4 +249,4 @@ RenameTab.propTypes = {
   t: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(translate('translations')(RenameTab));
+export default withStyles(styles)(withTranslation('translations')(RenameTab));

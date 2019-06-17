@@ -10,7 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import { getLastSourceEncryptFolder, getLastDestinationEncryptFolder, setLastSourceEncryptFolder, getLastEncryptKey, setLastDestinationEncryptFolder, setLastEncryptKey } from '../storage/EncryptDataTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
@@ -24,7 +24,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     paper: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
@@ -167,4 +167,4 @@ EncryptDataTab.propTypes = {
     t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(EncryptDataTab));
+export default withStyles(styles)(withTranslation('translations')(EncryptDataTab));

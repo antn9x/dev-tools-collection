@@ -10,7 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastSourceOptimizeFolder, getLastOptimizeJPGQuality, setLastDestinationOptimizeFolder } from '../storage/OptimizeImageTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
@@ -24,7 +24,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
@@ -91,47 +91,51 @@ class OptimizeImageTab extends Component {
     const { files, src, des, quality } = this.state;
     return (
       <Grid container spacing={8}>
-        <Grid item lg={4} container>
-          <Grid item lg={12}>     <FileChooser
-            isFolder
-            fileFolder={src}
-            label={t('source_folder')}
-            onChosenFolder={this.onClickSource}
-          />
-          </Grid>
-          <Grid item lg={12}>
-            <FileChooser
-              isFolder
-              fileFolder={des}
-              label={t('destination_folder')}
-              onChosenFolder={this.onClickDestination}
-            />
-          </Grid>
-          <Grid item lg={12}>
-            <TextField
-              id="outlined-with-placeholder"
-              label={t('jpg_quality')}
-              placeholder="100px"
-              fullWidth
-              className={classes.textField}
-              margin="normal"
-              variant="outlined"
-              value={quality}
-              onChange={this.handleChangeJPGQuality}
-            />
-          </Grid>
-          <Grid item lg={12}>
-            <Button
-              fullWidth
-              variant="outlined"
-              color="secondary"
-              size="large"
-              className={classes.button}
-              onClick={this.onClickOptimize}
-            >
-              {t('optimize')}
-            </Button>
-          </Grid>
+        <Grid item lg={4}>
+          <Paper>
+            <Grid item lg={12}>
+              <FileChooser
+                isFolder
+                fileFolder={src}
+                label={t('source_folder')}
+                onChosenFolder={this.onClickSource}
+              />
+            </Grid>
+            <Grid item lg={12}>
+              <FileChooser
+                isFolder
+                fileFolder={des}
+                label={t('destination_folder')}
+                onChosenFolder={this.onClickDestination}
+              />
+            </Grid>
+            <Grid item lg={12}>
+              <TextField
+                id="outlined-with-placeholder"
+                label={t('jpg_quality')}
+                placeholder="100px"
+                fullWidth
+                className={classes.textField}
+                margin="normal"
+                variant="outlined"
+                value={quality}
+                onChange={this.handleChangeJPGQuality}
+              />
+            </Grid>
+            <Grid item lg={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="secondary"
+                size="large"
+                className={classes.button}
+                onClick={this.onClickOptimize}
+              >
+                {t('optimize')}
+              </Button>
+            </Grid>
+          </Paper>
+
           <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
         </Grid>
         <Grid item lg={8}>
@@ -164,4 +168,4 @@ OptimizeImageTab.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(OptimizeImageTab));
+export default withStyles(styles)(withTranslation('translations')(OptimizeImageTab));

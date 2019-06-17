@@ -11,7 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
@@ -27,7 +27,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
@@ -158,6 +158,7 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
+                fullWidth
                 onChange={this.handleChangeWidth}
                 defaultValue={width}
               />
@@ -169,6 +170,7 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
+                fullWidth
                 onChange={this.handleChangeHeight}
                 defaultValue={height}
               />
@@ -230,4 +232,4 @@ ResizeTab.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(translate('translations')(ResizeTab));
+export default withStyles(styles)(withTranslation('translations')(ResizeTab));

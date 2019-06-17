@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core';
-import { translate } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
 
 import FileChooser from '../components/FileChooser';
-import PaperDropzone from '../components/PaperDropZone';
+import PaperDropZone from '../components/PaperDropZone';
 import DialogAlert from '../components/DialogAlert';
 
 import { sendCreateMobileIconsRequest } from '../network/api';
@@ -15,13 +14,15 @@ import { sendCreateMobileIconsRequest } from '../network/api';
 const SRC_LAST_OPTIMIZE_TOOL = 'src_Last_Optimize_tool';
 const DES_LAST_OPTIMIZE_TOOL = 'des_Last_Optimize_tool';
 
-const styles = ({
+const useStyles = makeStyles({
   root: {
     height: '80vh',
   }
 });
 
-const CreateMobileIcons = ({ t, classes }) => {
+const CreateMobileIcons = () => {
+  const classes = useStyles();
+  const { t } = useTranslation();
   const [src, setSrc] = useState(localStorage.getItem(SRC_LAST_OPTIMIZE_TOOL) || '');
   const [des, setDes] = useState(localStorage.getItem(DES_LAST_OPTIMIZE_TOOL) || '');
   const dialogAlert = useRef();
@@ -55,7 +56,7 @@ const CreateMobileIcons = ({ t, classes }) => {
     <Grid container className={classes.root}>
       <Grid item lg={4}>
         <Grid item xs={4} lg={12}>
-          <PaperDropzone
+          <PaperDropZone
             onDrop={onDropIcon}
             placeHolder={src || "Drop icon here. (square POT image like 512x512 or 1024x1024)"}
           />
@@ -98,9 +99,4 @@ const CreateMobileIcons = ({ t, classes }) => {
   );
 };
 
-CreateMobileIcons.propTypes = {
-  classes: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-};
-
-export default withStyles(styles)(translate('translations')(CreateMobileIcons));
+export default CreateMobileIcons;
