@@ -18,7 +18,7 @@ import {
 } from '../storage/ConvertSpriteSheetData';
 
 import FileChooser from '../components/FileChooser';
-import { sendConvertRequest } from '../network/api';
+import { sendConvertRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({

@@ -9,7 +9,7 @@ import FileChooser from '../components/FileChooser';
 import PaperDropZone from '../components/PaperDropZone';
 import DialogAlert from '../components/DialogAlert';
 
-import { sendCreateMobileIconsRequest } from '../network/api';
+import { sendCreateMobileIconsRequest } from '../network';
 import { getLastSourceCreateMobileIcons, getLastDestinationCreateMobileIcons,
    setLastSourceCreateMobileIcons, setLastDestinationCreateMobileIcons } from '../storage/CreateMobileIconsData';
 

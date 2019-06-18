@@ -28,6 +28,7 @@
   "new_ext": "New Ext",
   "old_name": "Old Name",
   "new_name": "New Name",
+  "re_name": "Rename",
   "title_source": "Select folder",
   "title_des": "Select destination folder, empty to override current folder"
 }

@@ -16,7 +16,7 @@ import { withTranslation } from 'react-i18next';
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
 import DialogAlert from '../components/DialogAlert';
-import { sendResizeRequest, sendGetFolderFilesRequest, sendLogRequest } from '../network/api';
+import { sendResizeRequest, sendGetFolderFilesRequest, sendLogRequest } from '../network';
 import {
   getLastResizeFolder, getLastResizeWidth, getLastResizeHeight, setLastResizeFolder,
   setLastResizeDestinationFolder, setLastResizeWidth, setLastResizeHeight, getLastResizeDestinationFolder

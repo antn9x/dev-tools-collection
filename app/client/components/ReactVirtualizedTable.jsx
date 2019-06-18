@@ -8,7 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Table, { Column } from 'react-virtualized/dist/commonjs/Table';
-import every from 'lodash/every';
 
 const styles = () => ({
   flexContainer: {
@@ -44,14 +43,14 @@ class MuiVirtualizedTable extends React.PureComponent {
   };
 
   getRowClassName = ({ index }) => {
-    const { classes, editingIndex } = this.props;
+    const { classes,  } = this.props;
 
     return clsx(classes.tableRow, classes.flexContainer, {
-      [classes.tableRowSelected]: index !== -1 && editingIndex === index,
+      [classes.tableRowSelected]: index !== -1
     });
   };
 
-  cellRenderer = ({ cellData, columnIndex, rowIndex }) => {
+  cellRenderer = ({ cellData, columnIndex }) => {
     const {
       columns, classes, rowHeight, onRowClick
     } = this.props;
@@ -92,7 +91,7 @@ class MuiVirtualizedTable extends React.PureComponent {
 
   render() {
     const {
-      classes, columns, editingIndex, ...tableProps
+      classes, columns,  ...tableProps
     } = this.props;
     return (
       <AutoSizer>
@@ -101,7 +100,6 @@ class MuiVirtualizedTable extends React.PureComponent {
             height={height}
             width={width}
             {...tableProps}
-            scrollToIndex={editingIndex}
             rowClassName={this.getRowClassName}
           >
             {columns.map(({ dataKey, ...other }, index) => (
@@ -132,26 +130,21 @@ MuiVirtualizedTable.propTypes = {
   headerHeight: PropTypes.number,
   onRowClick: PropTypes.func,
   rowHeight: PropTypes.number,
-  editingIndex: PropTypes.number,
 };
 
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 function ReactVirtualizedTable({
-  columns, rows, onRowClick, editingIndex
+  columns, rows, onRowClick, 
 }) {
   return (
     <Paper style={{ height: 400, width: '100%' }}>
-      {rows.length}
-      {rows.length&&rows[1].isSelected}
-      asdf{rows.map(r=><span>{r.isSelected}</span>)}asf
       <VirtualizedTable
         isSelectedAll={rows.every(r => r.isSelected)}
         rowCount={rows.length}
         rowGetter={({ index }) => rows[index]}
         columns={columns}
         onRowClick={onRowClick}
-        editingIndex={editingIndex}
       />
     </Paper>
   );
@@ -160,7 +153,6 @@ ReactVirtualizedTable.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   onRowClick: PropTypes.func.isRequired,
-  editingIndex: PropTypes.number.isRequired,
 };
 
 export default ReactVirtualizedTable;

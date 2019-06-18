@@ -19,7 +19,7 @@ let mainWindow = null;
 
 process.on('uncaughtException', (err) => {
   Logger.log('Connection was not established.');
-  Logger.error(err);
+  Logger.error(err.message);
 });
 
 process.on('unhandledRejection', (reason, p) => {

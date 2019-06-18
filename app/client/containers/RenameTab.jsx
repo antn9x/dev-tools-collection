@@ -5,27 +5,16 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
 
 import {
   setLastSourceRenameFolder, getLastSourceRenameFolder,
   setLastDestinationRenameFolder, getLastDestinationRenameFolder
 } from '../storage/RenameTabData';
 
-import { sendGetFolderFilesRequest, sendRename } from '../network/api';
+import { sendGetFolderFilesRequest, sendRename } from '../network';
 
 import FileChooser from '../components/FileChooser';
 import ReactVirtualizedTable from '../components/ReactVirtualizedTable';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
-  },
-}));
 
 const columns = [
   {
@@ -47,14 +36,14 @@ const columns = [
     numeric: true,
   },
 ];
+
 function RenameTab() {
-  const classes = useStyles();
   const { t } = useTranslation();
   const [src, setSrc] = useState(getLastSourceRenameFolder(''));
   const [des, setDes] = useState(getLastDestinationRenameFolder(''));
   const [files, setFiles] = useState([]);
-  const [oldName, setOldName] = useState([]);
-  const [newName, setNewName] = useState([]);
+  const [oldName, setOldName] = useState('');
+  const [newName, setNewName] = useState('');
 
   useEffect(() => {
     if (src)
@@ -75,7 +64,7 @@ function RenameTab() {
   };
 
   const handleRename = () => {
-    if (!oldName || !newName) {
+    if (!oldName) {
       console.log('Not null');
       return;
     }
@@ -93,7 +82,7 @@ function RenameTab() {
   const onRowClick = ({ index }) => {
     // console.log('Please select index!',index, files);
     files[index].isSelected = !files[index].isSelected;
-    setFiles(files);
+    setFiles([...files]);
   };
 
   return (
@@ -147,7 +136,7 @@ function RenameTab() {
               size="large"
               fullWidth
               onClick={handleRename}
-            >Rename
+            >{t("re_name")}
             </Button>
           </Grid>
         </Paper>

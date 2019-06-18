@@ -16,7 +16,7 @@ import { getLastSourceEncryptFolder, getLastDestinationEncryptFolder, setLastSou
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
 import FileChooser from '../components/FileChooser';
-import { sendGetFolderFilesRequest, sendEncryptRequest } from '../network/api';
+import { sendGetFolderFilesRequest, sendEncryptRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({

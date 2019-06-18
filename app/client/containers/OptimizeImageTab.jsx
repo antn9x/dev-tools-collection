@@ -16,7 +16,7 @@ import { getLastSourceOptimizeFolder, getLastDestinationOptimizeFolder, setLastS
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
 import FileChooser from '../components/FileChooser';
-import { sendGetFolderFilesRequest, sendOptimizeRequest } from '../network/api';
+import { sendGetFolderFilesRequest, sendOptimizeRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({
