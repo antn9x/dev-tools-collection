@@ -10,8 +10,10 @@ import PaperDropZone from '../components/PaperDropZone';
 import DialogAlert from '../components/DialogAlert';
 
 import { sendCreateMobileIconsRequest } from '../network';
-import { getLastSourceCreateMobileIcons, getLastDestinationCreateMobileIcons,
-   setLastSourceCreateMobileIcons, setLastDestinationCreateMobileIcons } from '../storage/CreateMobileIconsData';
+import {
+  LastSourceCreateMobileIcons,
+  LastDestinationCreateMobileIcons
+} from '../storage/CreateMobileIconsData';
 
 const useStyles = makeStyles({
   root: {
@@ -22,19 +24,19 @@ const useStyles = makeStyles({
 const CreateMobileIcons = () => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [src, setSrc] = useState(getLastSourceCreateMobileIcons(''));
-  const [des, setDes] = useState(getLastDestinationCreateMobileIcons(''));
+  const [src, setSrc] = useState(LastSourceCreateMobileIcons.get(''));
+  const [des, setDes] = useState(LastDestinationCreateMobileIcons.get(''));
   const dialogAlert = useRef();
 
   const onDropIcon = (files) => {
     // console.log(files);
     setSrc(files[0].path);
-    setLastSourceCreateMobileIcons(files[0].path);
+    LastSourceCreateMobileIcons.set(files[0].path);
   };
 
   const onChangeDestination = (files) => {
     setDes(files);
-    setLastDestinationCreateMobileIcons(files);
+    LastDestinationCreateMobileIcons.set(files);
   };
 
   const onClickOptimize = async () => {

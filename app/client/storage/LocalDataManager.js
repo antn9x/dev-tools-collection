@@ -113,40 +113,31 @@ export const setBoolForKey = (key, value) => {
  * @param {string} varName 
  * @param {string} type 
  */
-export const STRING = 'string';
-export const INTEGER = 'integer';
-export const FLOAT = 'float';
-export const OBJECT = 'object';
-export const BOOLEAN = 'boolean';
+export const STRING = 'String';
+export const INTEGER = 'Int';
+export const FLOAT = 'Float';
+export const OBJECT = 'Object';
+export const BOOLEAN = 'Boolean';
+
+const funcList = {
+  getIntForKey,
+  setIntForKey,
+  getFloatForKey,
+  setFloatForKey,
+  getObjectForKey,
+  setObjectForKey,
+  getBoolForKey,
+  setBoolForKey,
+  getStringForKey,
+  setStringForKey,
+};
 
 export const useStorage = (varName, type) => {
   const key = `${varName}, ${type}`;
-  let getter;
-  let setter;
-  switch (type) {
-    case INTEGER:
-      getter = getIntForKey;
-      setter = setIntForKey;
-      break;
-    case FLOAT:
-      getter = getFloatForKey;
-      setter = setFloatForKey;
-      break;
-    case OBJECT:
-      getter = getObjectForKey;
-      setter = setObjectForKey;
-      break;
-    case BOOLEAN:
-      getter = getBoolForKey;
-      setter = setBoolForKey;
-      break;
-    case STRING:
-    default:
-      getter = getStringForKey;
-      setter = setStringForKey;
-  }
-  return [
-    (defaultValue) => getter(key, defaultValue),
-    (value) => setter(key, value),
-  ];
+  const getter = funcList[`get${type}ForKey`];
+  const setter = funcList[`set${type}ForKey`];
+  return {
+    get: (defaultValue) => getter(key, defaultValue),
+    set: (value) => setter(key, value),
+  };
 };
