@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <% for sprite in sprites %>
+            <key><%=sprite.name%></key>
+            <dict>
+                <key>frame</key>
+                <string>{ { <%= sprite.x %>,<%= sprite.y %> },{ <%= sprite.w %>,<%= sprite.h %> } }</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{ {1,0},{ <%= sprite.w %>,<%= sprite.h %> } }</string>
+                <key>sourceSize</key>
+                <string>{ <%= sprite.w %>,<%= sprite.h %> }</string>
+            </dict>
+            <% }); %>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string><%= img.name =></string>
+            <key>size</key>
+            <string>{ <%= img.w =>,<%= img.h => }</string>
+            <key>textureFileName</key>
+            <string><%= img.name =></string>
+        </dict>
+        <key>texture</key>
+        <dict>
+            <key>width</key>
+            <integer><%= img.w =></integer>
+            <key>height</key>
+            <integer><%= img.h =></integer>
+        </dict>
+    </dict>
+</plist>

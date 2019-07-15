@@ -9,6 +9,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { withTranslation } from 'react-i18next';
 
 import {
@@ -20,6 +22,7 @@ import {
 import FileChooser from '../components/FileChooser';
 import { sendConvertRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
+import BootstrapInput from '../components/BootstrapInput';
 
 const styles = theme => ({
   root: {
@@ -85,6 +88,11 @@ class ConvertDataTab extends React.Component {
     this.setState({ des: event.target.value });
   }
 
+  handleChangeType = (event) => {
+    const { value: type } = event.target;
+    this.setState({ type });
+  }
+
   render() {
     const { classes, t } = this.props;
     const { type, src, des } = this.state;
@@ -103,7 +111,14 @@ class ConvertDataTab extends React.Component {
               onChosenFolder={this.onClickDestination}
             />
             <div>
-              {type}
+              <Select
+                value={type}
+                onChange={this.handleChangeType}
+                input={<BootstrapInput name="language" id="language-customized-select" />}
+              >
+                <MenuItem value={'JSON --> XML'}>JSON --&gt; XML</MenuItem>;
+                <MenuItem value={'JSON --> PLIST'}>JSON --&gt; PLIST</MenuItem>
+              </Select>
             </div>
             <Button
               variant="outlined"
