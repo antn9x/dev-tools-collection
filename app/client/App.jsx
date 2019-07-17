@@ -13,8 +13,9 @@ import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
 import EncryptDataTab from './containers/EncryptDataTab';
 import ConvertSpriteSheetExt from './containers/ConvertSpriteSheetExt';
-import { CHANGE_FUNCTION } from '../constant.message';
 import CreateMobileIcons from './containers/CreateMobileIcons';
+import CreateElectronIcons from './containers/CreateElectronIcons';
+import { CHANGE_FUNCTION } from '../constant.message';
 
 function TabContainer(props) {
   return (
@@ -57,8 +58,13 @@ class App extends React.Component {
     switch (tab) {
       case 0:
         return RenameTab;
-      case 1:
-        return type ? CreateMobileIcons : ResizeTab;
+      case 1: {
+        if (type === 1)
+          return CreateMobileIcons;
+        if (type === 2)
+          return CreateElectronIcons;
+        return ResizeTab;
+      }
       case 2:
         return OptimizeImageTab;
       case 3:

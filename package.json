@@ -158,6 +158,7 @@
     "lodash": "^4.17.11",
     "ncp": "^2.0.0",
     "node-dir": "^0.1.17",
+    "png2icons": "^2.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-dropzone": "^10.1.5",

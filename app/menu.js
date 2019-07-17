@@ -207,6 +207,12 @@ export default class MenuBuilder {
             this.mainWindow.webContents.send(CHANGE_FUNCTION, 1);
           }
         },
+        {
+          label: 'Create Electron Icons',
+          click: () => {
+            this.mainWindow.webContents.send(CHANGE_FUNCTION, 2);
+          }
+        },
       ]
     };
 

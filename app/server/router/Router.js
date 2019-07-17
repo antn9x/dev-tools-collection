@@ -9,7 +9,8 @@ import {
   ENCRYPT_DATA,
   LOG_DATA,
   CONVERT_SPRITE_SHEET_JSON2_XML,
-  CREATE_MOBILE_ICONS
+  CREATE_MOBILE_ICONS,
+  CREATE_ELECTRON_ICONS,
 } from '../../constant.message';
 import { modifyExt, rename } from '../services/RenameService';
 import {
@@ -21,7 +22,7 @@ import OptimizeAllImages from '../services/OptimizeImageService';
 import logData from '../services/LogService';
 import { resizeAllImages } from '../services/ResizeImagesService';
 import { encryptListFiles } from '../services/EncryptService';
-import createMobileIcons from '../services/IconsService';
+import { createMobileIcons, createElectronIcons } from '../services/IconsService';
 // import Logger from '../utils/Logger';
 
 const addListener = (name, listener) => {
@@ -42,4 +43,5 @@ export default function Router() {
   addListener(LOG_DATA, logData);
   addListener(CONVERT_SPRITE_SHEET_JSON2_XML, convertSpriteSheetJSON2XML);
   addListener(CREATE_MOBILE_ICONS, createMobileIcons);
+  addListener(CREATE_ELECTRON_ICONS, createElectronIcons);
 }

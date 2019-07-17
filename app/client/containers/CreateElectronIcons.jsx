@@ -9,11 +9,11 @@ import FileChooser from '../components/FileChooser';
 import PaperDropZone from '../components/PaperDropZone';
 import DialogAlert from '../components/DialogAlert';
 
-import { sendCreateMobileIconsRequest } from '../network';
+import { sendCreateElectronIconsRequest } from '../network';
 import {
-  LastSourceCreateMobileIcons,
-  LastDestinationCreateMobileIcons
-} from '../storage/CreateMobileIconsData';
+  LastSourceCreateElectronIcons,
+  LastDestinationCreateElectronIcons
+} from '../storage/CreateElectronIconsData';
 
 const useStyles = makeStyles({
   root: {
@@ -21,22 +21,22 @@ const useStyles = makeStyles({
   }
 });
 
-const CreateMobileIcons = () => {
+const CreateElectronIcons = () => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const [src, setSrc] = useState(LastSourceCreateMobileIcons.get(''));
-  const [des, setDes] = useState(LastDestinationCreateMobileIcons.get(''));
+  const [src, setSrc] = useState(LastSourceCreateElectronIcons.get(''));
+  const [des, setDes] = useState(LastDestinationCreateElectronIcons.get(''));
   const dialogAlert = useRef();
 
   const onDropIcon = (files) => {
     // console.log(files);
     setSrc(files[0].path);
-    LastSourceCreateMobileIcons.set(files[0].path);
+    LastSourceCreateElectronIcons.set(files[0].path);
   };
 
   const onChangeDestination = (files) => {
     setDes(files);
-    LastDestinationCreateMobileIcons.set(files);
+    LastDestinationCreateElectronIcons.set(files);
   };
 
   const onClickCreateIcons = async () => {
@@ -49,7 +49,7 @@ const CreateMobileIcons = () => {
       return;
     }
     // console.log(src, des);
-    await sendCreateMobileIconsRequest(src, des);
+    await sendCreateElectronIconsRequest(src, des);
     dialogAlert.current.showDialog(t('notification'), t('optimize_success'));
   };
 
@@ -100,4 +100,4 @@ const CreateMobileIcons = () => {
   );
 };
 
-export default CreateMobileIcons;
+export default CreateElectronIcons;

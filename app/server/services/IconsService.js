@@ -1,5 +1,7 @@
 import path from 'path';
 import sharp from 'sharp';
+import png2icons from 'png2icons';
+import fs from 'fs';
 
 // Command line interface
 const iconIOSSizes = [20, 40, 60, 29, 58, 87, 40, 80, 120, 50, 100, 57, 114, 120, 180, 72, 144, 76, 152, 167];
@@ -46,9 +48,25 @@ function createAndroidStudioIcons(imgFile, desFolder) {
         create1Icon(imgFile, outputFile, size);
     }
 }
-const createMobileIcons = ({ src, des }) => {
+export const createMobileIcons = ({ src, des }) => {
     createIOSIcons(src, des);
     createAndroidStudioIcons(src, des);
 };
 
-export default createMobileIcons;
+const iconsElectronSize = [16, 24, 32, 48, 64, 96, 128, 256, 512, 1024];
+
+export const createElectronIcons = ({ src, des }) => {
+    for (let i = 0; i < iconASSizes.length; i += 1) {
+        const size = iconsElectronSize[i];
+        const outputFileName = `${size}x${size}.png`;
+        const outputFile = path.join(des, "icons", outputFileName);
+        create1Icon(src, outputFile, size);
+    }
+    const input = fs.readFileSync(src);
+    const outputIco = png2icons.createICO(input, png2icons.BICUBIC2, 0, false, true);
+    fs.writeFileSync(path.join(des, "icon.ico"), outputIco);
+    const outputICNS = png2icons.createICNS(input, png2icons.BILINEAR, 0);
+    if (outputICNS) {
+        fs.writeFileSync(path.join(des, "icon.icns"), outputICNS);
+    }
+};
