@@ -28,12 +28,22 @@
 - Chose source project folder
 - Check result in right side table
 - Click create button
+## CREATE ICON ELECTRON IMAGE
+- Select menu item option "Create Electron Icons"
+- Chose source project folder
+- Check result in right side table
+- Click create button
 ## CONVERT SPRITE SHEET EXTENSION
 - Chose source file sprite sheet (current support json file)
 - Chose destination folder for create new files
 - Select type to convert
 - Check result in right side table
 - Click convert button
+
+#NEXT VERSION FEATURES
+- Remove inline comment in code
+- Replace text with case
+- Convert import to require/ require to import (JS)
 
 # DEV
 - npm run start-main-dev
