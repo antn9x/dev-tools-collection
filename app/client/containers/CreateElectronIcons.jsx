@@ -75,22 +75,10 @@ const CreateElectronIcons = () => {
           <Button
             variant="outlined"
             color="secondary"
-            className={classes.button}
-            onClick={onClickCreateIcons}
-          >
-            {t('convert_sprite_sheet_ext')}
-          </Button>
-        </Grid>
-      </Grid>
-      <hr />
-      <Grid lg={8}>
-        <Grid >
-          <Button
-            bsStyle="primary"
             bsSize="large"
             block
             className="optimizeButton"
-            onClick={() => onClickCreateIcons()}
+            onClick={onClickCreateIcons}
           >Create Icons
           </Button>
         </Grid>

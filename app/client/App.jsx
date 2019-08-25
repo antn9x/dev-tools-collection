@@ -45,7 +45,8 @@ class App extends React.Component {
 
   componentDidMount() {
     ipcRenderer.on(CHANGE_FUNCTION, (sender, type) => {
-      const tab = type;
+      const tab = 1;
+      console.log({ tab, type });
       this.setState({ tab, type });
     });
   }

@@ -1,8 +1,9 @@
 import path from 'path';
 import sharp from 'sharp';
-import png2icons from 'png2icons';
+// import png2icons from 'png2icons';
 import fs from 'fs';
 
+const png2icons = require("png2icons");
 // Command line interface
 const iconIOSSizes = [20, 40, 60, 29, 58, 87, 40, 80, 120, 50, 100, 57, 114, 120, 180, 72, 144, 76, 152, 167];
 const iOSFilesName = ["20", "20@2x", "20@3x", "29", "29@2x", "29@3x", "40", "40@2x", "40@3x",
