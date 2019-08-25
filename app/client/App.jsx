@@ -5,17 +5,21 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
+import { ipcRenderer } from 'electron';
 
 import RenameTab from './containers/RenameTab';
 import ResizeTab from './containers/ResizeTab';
 import OptimizeImageTab from './containers/OptimizeImageTab';
 import EncryptDataTab from './containers/EncryptDataTab';
 import ConvertSpriteSheetExt from './containers/ConvertSpriteSheetExt';
+import CreateMobileIcons from './containers/CreateMobileIcons';
+import CreateElectronIcons from './containers/CreateElectronIcons';
+import { CHANGE_FUNCTION } from '../constant.message';
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 24 }}>
       {props.children}
     </Typography>
   );
@@ -35,16 +39,47 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
-    tab: 4,
+    tab: 0,
+    type: 0,
   };
+
+  componentDidMount() {
+    ipcRenderer.on(CHANGE_FUNCTION, (sender, type) => {
+      const tab = type;
+      this.setState({ tab, type });
+    });
+  }
 
   handleChange = (event, tab) => {
     this.setState({ tab });
   };
 
+  getTab = (tab, type) => {
+    switch (tab) {
+      case 0:
+        return RenameTab;
+      case 1: {
+        if (type === 1)
+          return CreateMobileIcons;
+        if (type === 2)
+          return CreateElectronIcons;
+        return ResizeTab;
+      }
+      case 2:
+        return OptimizeImageTab;
+      case 3:
+        return EncryptDataTab;
+      case 4:
+        return ConvertSpriteSheetExt;
+      default:
+        return RenameTab;
+    }
+  }
+
   render() {
     const { classes, t } = this.props;
-    const { tab } = this.state;
+    const { tab, type } = this.state;
+    const TabComponent = this.getTab(tab, type);
 
     return (
       <div className={classes.root}>
@@ -57,11 +92,9 @@ class App extends React.Component {
             <Tab label={t('convert_sprite_sheet_ext')} />
           </Tabs>
         </AppBar>
-        {tab === 0 && <TabContainer><RenameTab /></TabContainer>}
-        {tab === 1 && <TabContainer><ResizeTab /></TabContainer>}
-        {tab === 2 && <TabContainer><OptimizeImageTab /></TabContainer>}
-        {tab === 3 && <TabContainer><EncryptDataTab /></TabContainer>}
-        {tab === 4 && <TabContainer><ConvertSpriteSheetExt /></TabContainer>}
+        <TabContainer>
+          <TabComponent />
+        </TabContainer>
       </div>
     );
   }
@@ -72,4 +105,4 @@ App.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(App));
+export default withStyles(styles)(withTranslation('translations')(App));

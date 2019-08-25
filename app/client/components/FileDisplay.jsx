@@ -13,7 +13,7 @@ class FileDisplay extends Component {
 
   render() {
     const { file } = this.props;
-    const demension = `${this.props.width} x ${this.props.height}`;
+    const dimension = `${this.props.width} x ${this.props.height}`;
     const oldName = file.item.base;
     
     return (
@@ -32,7 +32,7 @@ class FileDisplay extends Component {
             margin="normal"
             variant="outlined"
             fullWidth
-            value={demension}
+            value={dimension}
             
           />
         </TableCell>

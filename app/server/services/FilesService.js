@@ -30,8 +30,14 @@ const getFrameData = (sprite) => ({
   height: sprite.frame.h,
 });
 
+const getTemplateByType = (type) => {
+  if (/xml/i.test(type))
+    return path.join(__dirname, '../ejs/sprite_xml.ejs');
+  path.join(__dirname, '../ejs/sprite_plist.ejs');
+};
+
 export const convertSpriteSheetJSON2XML = ({ type, src, des }) => {
-  const xmlTemplate = path.join(__dirname, '../ejs/sprite_xml.ejs');
+  const xmlTemplate = getTemplateByType(type);
   // Logger.log(type, src, xmlTemplate);
   const json = JSON.parse(fs.readFileSync(src));
   const data = {
@@ -45,7 +51,8 @@ export const convertSpriteSheetJSON2XML = ({ type, src, des }) => {
     }
     // str => Rendered HTML string
     // Logger.log(str);
-    const xmlPath = des || src.replace('.json', '.xml');
+    const newExt = (/xml/i.test(type)) ? '.xml' : 'plist';
+    const xmlPath = des || src.replace('.json', newExt);
     fs.writeFileSync(xmlPath, str);
   });
 };

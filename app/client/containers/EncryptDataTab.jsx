@@ -10,14 +10,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import { getLastSourceEncryptFolder, getLastDestinationEncryptFolder, setLastSourceEncryptFolder, getLastEncryptKey, setLastDestinationEncryptFolder, setLastEncryptKey } from '../storage/EncryptDataTabData';
 import FileOptimizeRow from '../components/FileOptimizeRow';
 
-import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
-import { sendGetFolderFilesRequest, sendEncryptRequest } from '../network/api';
+import { sendGetFolderFilesRequest, sendEncryptRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
 
 const styles = theme => ({
@@ -25,7 +24,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     paper: {
-        padding: theme.spacing.unit * 2,
+        padding: theme.spacing(2),
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
@@ -99,8 +98,8 @@ class EncryptDataTab extends React.Component {
         const { files, src, des } = this.state;
         return (
           <Grid container spacing={8}>
-            <Grid item xs={3}>
-              <Paper className={css.functions_wrapper}>
+            <Grid item xs={4}>
+              <Paper>
                 <FileChooser
                   isFolder
                   fileFolder={src}
@@ -115,6 +114,7 @@ class EncryptDataTab extends React.Component {
                 />
                 <TextField
                   id="outlined-with-placeholder"
+                  fullWidth
                   label={t('encrypt_key')}
                   placeholder="100px"
                   className={classes.textField}
@@ -126,6 +126,8 @@ class EncryptDataTab extends React.Component {
                 <Button
                   variant="outlined"
                   color="secondary"
+                  size="large"
+                  fullWidth
                   className={classes.button}
                   onClick={this.onClickEncrypt}
                 >
@@ -134,7 +136,7 @@ class EncryptDataTab extends React.Component {
                 <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
               </Paper>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               <Paper className={classes.paper}>
                 <Table>
                   <TableHead >
@@ -165,4 +167,4 @@ EncryptDataTab.propTypes = {
     t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(EncryptDataTab));
+export default withStyles(styles)(withTranslation('translations')(EncryptDataTab));

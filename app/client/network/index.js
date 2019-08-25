@@ -1,6 +1,4 @@
-import {
-  ipcRenderer
-} from 'electron';
+import { ipcRenderer } from 'electron';
 import {
   OPTIMIZE,
   GET_FOLDER_FILES,
@@ -10,7 +8,9 @@ import {
   ENCRYPT_DATA,
   RE_SIZE,
   LOG_DATA,
-  CONVERT_SPRITE_SHEET_JSON2_XML
+  CONVERT_SPRITE_SHEET_JSON2_XML,
+  CREATE_MOBILE_ICONS,
+  CREATE_ELECTRON_ICONS
 } from '../../constant.message';
 
 const sendRequest = (key, data) => {
@@ -87,4 +87,8 @@ export const sendResizeRequest = (src, des, names, width, height) =>
  */
 export const sendLogRequest = (message) => sendRequest(LOG_DATA, message);
 
-export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, {type, src, des});
+export const sendConvertRequest = (type, src, des) => sendRequest(CONVERT_SPRITE_SHEET_JSON2_XML, { type, src, des });
+
+export const sendCreateMobileIconsRequest = ( src, des) => sendRequest(CREATE_MOBILE_ICONS, { src, des });
+
+export const sendCreateElectronIconsRequest = ( src, des) => sendRequest(CREATE_ELECTRON_ICONS, { src, des });

@@ -11,12 +11,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import FileDisplay from '../components/FileDisplay';
 import FileChooser from '../components/FileChooser';
 import DialogAlert from '../components/DialogAlert';
-import { sendResizeRequest, sendGetFolderFilesRequest, sendLogRequest } from '../network/api';
+import { sendResizeRequest, sendGetFolderFilesRequest, sendLogRequest } from '../network';
 import {
   getLastResizeFolder, getLastResizeWidth, getLastResizeHeight, setLastResizeFolder,
   setLastResizeDestinationFolder, setLastResizeWidth, setLastResizeHeight, getLastResizeDestinationFolder
@@ -27,7 +27,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
@@ -135,7 +135,7 @@ class ResizeTab extends React.Component {
 
     return (
       <Grid container spacing={8}>
-        <Grid item xs={3}>
+        <Grid item lg={4}>
           <Paper className={classes.paper}>
             <FileChooser
               isFolder
@@ -158,6 +158,7 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
+                fullWidth
                 onChange={this.handleChangeWidth}
                 defaultValue={width}
               />
@@ -169,6 +170,7 @@ class ResizeTab extends React.Component {
                 className={classes.textField}
                 margin="normal"
                 variant="outlined"
+                fullWidth
                 onChange={this.handleChangeHeight}
                 defaultValue={height}
               />
@@ -176,6 +178,8 @@ class ResizeTab extends React.Component {
             <Button
               variant="outlined"
               color="secondary"
+              size="large"
+              fullWidth
               style={{ marginTop: 8 }}
               className={classes.button}
               onClick={this.onClickResize}
@@ -185,7 +189,7 @@ class ResizeTab extends React.Component {
             <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
           </Paper>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item lg={8}>
           <Paper className={classes.paper}>
             <Table>
               <TableHead >
@@ -198,7 +202,7 @@ class ResizeTab extends React.Component {
                     />
                   </TableCell>
                   <TableCell >{t('name')}</TableCell>
-                  <TableCell >{t('demension')}</TableCell>
+                  <TableCell >{t('dimension')}</TableCell>
                 </TableRow>
               </TableHead>
 
@@ -228,4 +232,4 @@ ResizeTab.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(translate('translations')(ResizeTab));
+export default withStyles(styles)(withTranslation('translations')(ResizeTab));

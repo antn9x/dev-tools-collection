@@ -1,7 +1,7 @@
 {
   "convert_sprite_sheet_ext": "Convert Sprite Sheet Extension",
   "encrypt_success": "Encrypt successful!",
-  "resize_success": "Resize successfull!",
+  "resize_success": "Resize successful!",
   "enter_width": "Please enter width!",
   "enter_height": "Please enter height!",
   "no_file_selected": "No file selected, please choose!",
@@ -9,8 +9,8 @@
   "width": "Width",
   "height": "Height",
   "re_size": "RE SIZE",
-  "demension": "Demension",
-  "optimze_success": "Optimize successful!",
+  "dimension": "Dimension",
+  "optimize_success": "Optimize successful!",
   "import_source": "Please choose source folder!",
   "ok": "OK",
   "notification": "Notification!",
@@ -28,6 +28,7 @@
   "new_ext": "New Ext",
   "old_name": "Old Name",
   "new_name": "New Name",
+  "re_name": "Rename",
   "title_source": "Select folder",
-  "title_des": "Select destination folder, to empty override current folder"
+  "title_des": "Select destination folder, empty to override current folder"
 }

@@ -11,16 +11,15 @@
  * @flow
  */
 import { app, BrowserWindow } from 'electron';
+import MenuBuilder from './menu';
 import Logger from './server/utils/Logger';
 import Router from './server/router/Router';
 
 let mainWindow = null;
 
-Logger.log('Server is starting... ');
-
 process.on('uncaughtException', (err) => {
   Logger.log('Connection was not established.');
-  Logger.error(err);
+  Logger.error(err.message);
 });
 
 process.on('unhandledRejection', (reason, p) => {
@@ -96,6 +95,6 @@ app.on('ready', async () => {
     mainWindow = null;
   });
 
-  // const menuBuilder = new MenuBuilder(mainWindow);
-  // menuBuilder.buildMenu();
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
 });

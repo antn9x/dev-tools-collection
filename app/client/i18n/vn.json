@@ -1,6 +1,7 @@
 {
-  "optimze_success": "Tối ưu hoá thành công!",
-  "import_source": "Xin chọn thư mục nguồn!",
+  "optimize_success": "Tối ưu hoá thành công!",
+  "import_destination": "Xin chọn thư mục nguồn!",
+  "import_source": "Xin chọn thư mục đích!",
   "ok": "Đồng ý.",
   "notification": "Thông báo!",
   "warning": "Cảnh báo!",
@@ -17,6 +18,7 @@
   "new_ext": "Phần mở rộng mới",
   "old_name": "Tên cũ",
   "new_name": "Tên mới",
+  "re_name": "Đổi tên",
   "title_source": "Chọn thư mục",
   "title_des": "Chọn thư mục nhận, để trống tự động ghi đè thư mục hiện tại."
 }

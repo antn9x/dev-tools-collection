@@ -9,7 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import { translate } from 'react-i18next';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withTranslation } from 'react-i18next';
 
 import {
   getLastSourceConvertFolder, getLastDestinationConvertFolder,
@@ -17,17 +19,17 @@ import {
   getLastConvertType
 } from '../storage/ConvertSpriteSheetData';
 
-import css from './OptimizeImageTab.css';
 import FileChooser from '../components/FileChooser';
-import { sendConvertRequest } from '../network/api';
+import { sendConvertRequest } from '../network';
 import DialogAlert from '../components/DialogAlert';
+import BootstrapInput from '../components/BootstrapInput';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
@@ -86,13 +88,18 @@ class ConvertDataTab extends React.Component {
     this.setState({ des: event.target.value });
   }
 
+  handleChangeType = (event) => {
+    const { value: type } = event.target;
+    this.setState({ type });
+  }
+
   render() {
     const { classes, t } = this.props;
     const { type, src, des } = this.state;
     return (
       <Grid container spacing={8}>
-        <Grid item xs={3}>
-          <Paper className={css.functions_wrapper}>
+        <Grid item lg={4}>
+          <Paper>
             <FileChooser
               fileFolder={src}
               label={t('source_folder')}
@@ -104,11 +111,20 @@ class ConvertDataTab extends React.Component {
               onChosenFolder={this.onClickDestination}
             />
             <div>
-              {type}
+              <Select
+                value={type}
+                onChange={this.handleChangeType}
+                input={<BootstrapInput name="language" id="language-customized-select" />}
+              >
+                <MenuItem value={'JSON --> XML'}>JSON --&gt; XML</MenuItem>;
+                <MenuItem value={'JSON --> PLIST'}>JSON --&gt; PLIST</MenuItem>
+              </Select>
             </div>
             <Button
               variant="outlined"
               color="secondary"
+              size="large"
+              fullWidth
               className={classes.button}
               onClick={this.onClickConvert}
             >
@@ -117,7 +133,7 @@ class ConvertDataTab extends React.Component {
             <DialogAlert innerRef={this.dialogAlert} buttonLabel={t('ok')} />
           </Paper>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item lg={8}>
           <Paper className={classes.paper}>
             <Table>
               <TableHead >
@@ -141,4 +157,4 @@ ConvertDataTab.propTypes = {
   t: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(translate('translations')(ConvertDataTab));
+export default withStyles(styles)(withTranslation('translations')(ConvertDataTab));

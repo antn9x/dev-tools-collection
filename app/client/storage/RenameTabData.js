@@ -17,8 +17,8 @@ export const getLastSourceRenameFolder = () => getStringForKey(SOURCE_LAST_RENAM
  * 
  * @param {String} value source folder selected
  */
-export const setLastDesitnationRenameFolder = (value) => {
+export const setLastDestinationRenameFolder = (value) => {
   setStringForKey(DESTINATION_LAST_RENAME_FOLDER, value);
 };
 
-export const getLastDesitnationRenameFolder = () => getStringForKey(DESTINATION_LAST_RENAME_FOLDER, '');
+export const getLastDestinationRenameFolder = () => getStringForKey(DESTINATION_LAST_RENAME_FOLDER, '');
