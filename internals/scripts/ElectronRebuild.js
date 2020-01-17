@@ -1,4 +1,3 @@
-// @flow
 import path from 'path';
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -19,6 +18,6 @@ if (
       : electronRebuildCmd;
 
   execSync(cmd, {
-    cwd: path.join(__dirname, '..', '..', 'app')
+    cwd: path.join(__dirname, '..', '..', 'app'),
   });
 }

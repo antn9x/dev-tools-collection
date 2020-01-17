@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@@/*": [
+        "app/client/*"
+      ],
+      "@components/*": [
+        "app/client/components/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

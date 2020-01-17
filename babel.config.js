@@ -1,16 +1,14 @@
-{
+module.exports = {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
-          "node": 7
-        },
-        "useBuiltIns": true
+          "electron": 7
+        }
       }
     ],
-    "stage-0",
-    "react"
+    "@babel/preset-react"
   ],
   "plugins": [
     "add-module-exports"
@@ -26,9 +24,9 @@
     },
     "development": {
       "plugins": [
-        "transform-class-properties",
-        "transform-es2015-classes"
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-classes"
       ]
     }
   }
-}
+};
